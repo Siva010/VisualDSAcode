@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valid Palindrome II · Two-Pointer Visualizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b111d;
+    --ink-2:#111a2b;
+    --panel:#151f33;
+    --panel-2:#1a2740;
+    --line:#26344f;
+    --line-soft:#1f2c44;
+    --txt:#e7eefb;
+    --muted:#8395b4;
+    --muted-2:#5f7196;
+    --mint:#37e0c4;      /* matched */
+    --mint-deep:#0f2f2c;
+    --gold:#f6c453;      /* comparing */
+    --gold-deep:#33290b;
+    --coral:#ff6f61;     /* mismatch / fail */
+    --coral-deep:#3a1512;
+    --blue:#6ea8ff;      /* pointer L / i */
+    --violet:#b78bff;    /* pointer R / j */
+    --slate:#243349;     /* window frame */
+    --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:
+      radial-gradient(1200px 600px at 15% -10%, #16233b 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #191330 0%, transparent 50%),
+      var(--ink);
+    color:var(--txt);font-family:var(--display);
+    -webkit-font-smoothing:antialiased;min-height:100%;
+  }
+  body{padding:28px 20px 64px;max-width:1160px;margin:0 auto}
+  a{color:inherit}
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--mint);display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  }
+  .eyebrow .tag{
+    color:var(--muted);border:1px solid var(--line);border-radius:999px;
+    padding:3px 10px;letter-spacing:.12em;font-size:11px;
+  }
+  h1{font-size:clamp(30px,5vw,50px);font-weight:700;line-height:1.02;letter-spacing:-.02em}
+  h1 .thin{color:var(--muted);font-weight:400}
+  .lede{color:var(--muted);max-width:640px;margin-top:14px;font-size:15.5px;line-height:1.55}
+  .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);
+    padding:1px 6px;border-radius:6px;font-size:.9em}
+
+  /* ---------- input row ---------- */
+  .controls-top{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  .field{flex:1;min-width:260px}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  .input-shell{display:flex;gap:10px}
+  input[type=text]{
+    flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
+    font-family:var(--mono);font-size:19px;letter-spacing:.14em;padding:14px 16px;border-radius:12px;
+    outline:none;transition:border-color .2s, box-shadow .2s;
+  }
+  input[type=text]:focus{border-color:var(--mint);box-shadow:0 0 0 4px rgba(55,224,196,.12)}
+  .btn{
+    font-family:var(--display);font-weight:600;font-size:15px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);border-radius:12px;padding:0 20px;height:52px;
+    cursor:pointer;transition:transform .12s, background .2s, border-color .2s;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:9px;
+  }
+  .btn:hover{background:var(--panel-2);border-color:var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(180deg,#3ff0d3,#20c3ab);color:#052420;border:none;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{
+    font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--muted);
+    background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;
+    padding:6px 13px;cursor:pointer;transition:.18s;
+  }
+  .chip:hover{color:var(--txt);border-color:var(--mint);background:var(--mint-deep)}
+  .chip b{color:var(--muted-2);font-weight:400;margin-left:7px}
+
+  /* ---------- layout ---------- */
+  .grid{display:grid;grid-template-columns:1.45fr 1fr;gap:20px;margin-top:26px;align-items:start}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .card-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.012);
+  }
+  .card-head h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted);font-weight:500}
+  .phase-pill{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .phase-pill.scan{color:var(--gold);border-color:#4a3d17;background:var(--gold-deep)}
+  .phase-pill.branch{color:var(--violet);border-color:#3a2c58;background:#1c1430}
+  .phase-pill.done-ok{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.done-no{color:var(--coral);border-color:#4a1c17;background:var(--coral-deep)}
+
+  /* ---------- stage ---------- */
+  .stage{padding:34px 20px 20px;min-height:210px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:26px}
+  .tape{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .col{display:flex;flex-direction:column;align-items:center;gap:8px;width:52px}
+  @media (max-width:520px){.col{width:40px}}
+  .caret{height:20px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;
+    display:flex;gap:3px;align-items:center;justify-content:center;transition:opacity .2s}
+  .caret .p{padding:1px 5px;border-radius:5px;line-height:1.3}
+  .caret .pL{color:#04121f;background:var(--blue)}
+  .caret .pR{color:#100420;background:var(--violet)}
+  .cell{
+    width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:24px;font-weight:600;border-radius:12px;
+    background:var(--ink-2);border:1.5px solid var(--line);color:var(--txt);
+    transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .25s,border-color .25s,color .25s,box-shadow .25s;
+    position:relative;
+  }
+  @media (max-width:520px){.cell{font-size:19px}}
+  .idx{font-family:var(--mono);font-size:11px;color:var(--muted-2);transition:color .2s}
+
+  /* cell states */
+  .cell.matched{background:var(--mint-deep);border-color:var(--mint);color:var(--mint)}
+  .cell.active{background:var(--gold-deep);border-color:var(--gold);color:var(--gold);
+    transform:translateY(-6px) scale(1.06);box-shadow:0 10px 24px -12px var(--gold)}
+  .cell.mismatch{background:var(--coral-deep);border-color:var(--coral);color:var(--coral);
+    transform:translateY(-4px) scale(1.04);box-shadow:0 10px 24px -12px var(--coral)}
+  .cell.window{border-color:var(--slate);background:#0f1a2b}
+  .cell.skipped{opacity:.32;text-decoration:line-through;text-decoration-color:var(--coral);
+    text-decoration-thickness:2px;border-style:dashed}
+  .cell.imatch{background:#10262d;border-color:#2b6f68;color:#7fe6d6}
+  .col.dim{opacity:.4}
+  .idx.on{color:var(--gold)}
+
+  /* message */
+  .message{
+    font-family:var(--mono);font-size:14.5px;line-height:1.6;color:var(--txt);
+    text-align:center;max-width:640px;min-height:46px;padding:0 6px;
+  }
+  .message .k{color:var(--gold)}
+  .message .m{color:var(--mint)}
+  .message .x{color:var(--coral)}
+  .message .v{color:var(--violet)}
+  .message .mut{color:var(--muted)}
+
+  .result-banner{
+    display:none;align-items:center;gap:12px;justify-content:center;
+    font-family:var(--display);font-weight:700;font-size:19px;padding:14px 22px;border-radius:14px;
+    animation:pop .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .result-banner.ok{display:flex;color:var(--mint);background:var(--mint-deep);border:1px solid #1c5b52}
+  .result-banner.no{display:flex;color:var(--coral);background:var(--coral-deep);border:1px solid #5a221c}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* ---------- transport ---------- */
+  .transport{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line);
+    flex-wrap:wrap;background:rgba(255,255,255,.012)}
+  .icon-btn{width:44px;height:44px;padding:0;justify-content:center;font-size:16px}
+  .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:6px;background:var(--ink-2);border-radius:999px;overflow:hidden;border:1px solid var(--line-soft)}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--blue));transition:width .2s}
+  .step-count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .speed{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+  .speed input{accent-color:var(--mint);width:96px}
+
+  /* ---------- code panel ---------- */
+  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:13px;line-height:1.75;overflow-x:auto}
+  .code .ln{display:flex;padding:1px 18px 1px 0;white-space:pre;transition:background .18s}
+  .code .ln .no{width:34px;text-align:right;padding-right:16px;color:#3f5170;user-select:none;flex-shrink:0}
+  .code .ln .tx{color:#c6d4ee}
+  .code .kw{color:#ff9db1}
+  .code .ty{color:#7fd0ff}
+  .code .fn{color:#f6c453}
+  .code .nm{color:#c9b6ff}
+  .code .cm{color:#5c6f90}
+  .code .ln.exec{background:linear-gradient(90deg,rgba(246,196,83,.14),transparent 82%)}
+  .code .ln.exec .no{color:var(--gold)}
+  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:22px;background:var(--gold);border-radius:2px}
+  .code .ln{position:relative}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:14px 18px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:4px;border:1.5px solid}
+  .dot.g{background:var(--gold-deep);border-color:var(--gold)}
+  .dot.m{background:var(--mint-deep);border-color:var(--mint)}
+  .dot.c{background:var(--coral-deep);border-color:var(--coral)}
+  .dot.s{border-color:var(--coral);border-style:dashed;opacity:.6}
+
+  .foot{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);text-align:center;line-height:1.7}
+  @media (prefers-reduced-motion:reduce){
+    .cell,.caret,.progress .bar{transition:none!important}
+    .cell.active,.cell.mismatch{transform:none}
+  }
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">
+    Two-Pointer Pattern <span class="tag">LeetCode 680</span>
+  </div>
+  <h1>Valid Palindrome II <span class="thin">/ visualized</span></h1>
+  <p class="lede">
+    Check whether a string can become a palindrome by deleting <b>at most one</b> character.
+    Type any string below and watch the pointers close in — when they disagree, the algorithm
+    <em>forks</em>: it tries skipping <code>left</code>, then skipping <code>right</code>.
+  </p>
+
+  <div class="controls-top">
+    <div class="field">
+      <label for="strInput">Input string</label>
+      <div class="input-shell">
+        <input id="strInput" type="text" value="cbbcc" spellcheck="false" autocomplete="off" maxlength="24">
+        <button class="btn primary" id="runBtn">▶ Run</button>
+      </div>
+    </div>
+  </div>
+  <div class="examples" id="examples"></div>
+
+  <div class="grid">
+    <!-- VISUALIZER -->
+    <div class="card">
+      <div class="card-head">
+        <h2>Execution</h2>
+        <span class="phase-pill" id="phasePill">idle</span>
+      </div>
+      <div class="stage">
+        <div class="tape" id="tape"></div>
+        <div class="message" id="message">Press <span class="k">Run</span> to begin.</div>
+        <div class="result-banner" id="banner"></div>
+      </div>
+      <div class="transport">
+        <button class="btn icon-btn" id="prevBtn" title="Previous step">⏴</button>
+        <button class="btn icon-btn" id="playBtn" title="Play / Pause">▶</button>
+        <button class="btn icon-btn" id="nextBtn" title="Next step">⏵</button>
+        <button class="btn icon-btn" id="restartBtn" title="Restart">⟲</button>
+        <div class="progress-wrap">
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <span class="step-count" id="stepCount">0 / 0</span>
+        </div>
+        <div class="speed">
+          Speed
+          <input type="range" id="speed" min="1" max="10" value="5">
+        </div>
+      </div>
+    </div>
+
+    <!-- CODE -->
+    <div class="card">
+      <div class="card-head"><h2>Java · running line</h2></div>
+      <div class="code" id="code"></div>
+      <div class="legend">
+        <span><i class="dot g"></i>comparing</span>
+        <span><i class="dot m"></i>matched</span>
+        <span><i class="dot c"></i>mismatch</span>
+        <span><i class="dot s"></i>skipped char</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    O(n) time · O(1) extra space &nbsp;·&nbsp; the fork adds at most one extra linear pass, so it stays linear overall.
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Java source (for the synced code panel) ----------
+  const CODE = [
+    [['kw','public '],['ty','boolean '],['fn','validPalindrome'],['tx','(String s) {']],
+    [['tx','    '],['kw','int '],['tx','left = 0;']],
+    [['tx','    '],['kw','int '],['tx','right = s.length() - 1;']],
+    [['tx','    '],['kw','while '],['tx','(left < right) {']],
+    [['tx','        '],['kw','if '],['tx','(s.charAt(left) != s.charAt(right)) {']],
+    [['tx','            '],['kw','return '],['fn','isPalin'],['tx','(s, left+1, right)']],
+    [['tx','                || '],['fn','isPalin'],['tx','(s, left, right-1);']],
+    [['tx','        }']],
+    [['tx','        left++;  right--;']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['ty','true'],['tx',';']],
+    [['tx','}']],
+    [['tx','']],
+    [['kw','boolean '],['fn','isPalin'],['tx','(String s, '],['kw','int '],['tx','i, '],['kw','int '],['tx','j) {']],
+    [['tx','    '],['kw','while '],['tx','(i < j) {']],
+    [['tx','        '],['kw','if '],['tx','(s.charAt(i) != s.charAt(j))']],
+    [['tx','            '],['kw','return '],['ty','false'],['tx',';']],
+    [['tx','        i++;  j--;']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['ty','true'],['tx',';']],
+    [['tx','}']]
+  ];
+
+  // ---------- Frame generator: records every visual state ----------
+  // Each frame: {states[], carets[], msg, code, phase, result, dimSkipTo}
+  //   states[i]  -> '', 'matched','active','mismatch','window','skipped','imatch'
+  //   carets[i]  -> [] or ['L'],['R'],['i'],['j'] (labels shown under a cell)
+  function buildFrames(s){
+    const n = s.length;
+    const frames = [];
+    const base = () => ({ states:Array(n).fill(''), carets:Array(n).fill(null) });
+
+    const esc = c => c===' ' ? '␣' : c;
+
+    function push(f){ frames.push(f); }
+
+    if(n <= 1){
+      const f = base();
+      push({ ...f, phase:'done-ok', code:10, result:true,
+        msg:`Length ${n} — trivially a palindrome. <span class="m">Return true.</span>` });
+      return frames;
+    }
+
+    let left = 0, right = n - 1;
+    const matched = new Set();
+
+    // helper to render a main-scan frame from current matched set
+    function mainStates(){
+      const st = Array(n).fill('');
+      matched.forEach(i => st[i] = 'matched');
+      return st;
+    }
+
+    push({ states:mainStates(), carets:mark(n,{[left]:'L',[right]:'R'}),
+      phase:'scan', code:3, result:null,
+      msg:`Set <span class="k">left = 0</span>, <span class="v">right = ${n-1}</span>. Walk inward.` });
+
+    let decided = false;
+
+    while(left < right){
+      // compare frame
+      let st = mainStates(); st[left]='active'; st[right]='active';
+      push({ states:st, carets:mark(n,{[left]:'L',[right]:'R'}), phase:'scan', code:4, result:null,
+        msg:`Compare <span class="k">'${esc(s[left])}'</span> @${left} vs <span class="k">'${esc(s[right])}'</span> @${right}` });
+
+      if(s[left] === s[right]){
+        matched.add(left); matched.add(right);
+        let st2 = mainStates(); st2[left]='matched'; st2[right]='matched';
+        push({ states:st2, carets:mark(n,{[left]:'L',[right]:'R'}), phase:'scan', code:8, result:null,
+          msg:`<span class="m">Match ✓</span> equal chars — step both pointers inward.` });
+        left++; right--;
+      } else {
+        // mismatch → branch
+        let stm = mainStates(); stm[left]='mismatch'; stm[right]='mismatch';
+        push({ states:stm, carets:mark(n,{[left]:'L',[right]:'R'}), phase:'branch', code:4, result:null,
+          msg:`<span class="x">Mismatch ✗</span> '${esc(s[left])}' ≠ '${esc(s[right])}'. Spend the one allowed deletion.` });
+
+        // Branch A: skip LEFT char -> check window [left+1, right]
+        const passA = runBranch('left', left+1, right, left, matched, s, frames, n, esc, /*firstBranch*/true);
+        if(passA){
+          push({ states:winStates(n,matched,left+1,right,left,true), carets:mark(n,{}),
+            phase:'done-ok', code:10, result:true,
+            msg:`Branch <span class="v">skip-left</span> succeeded → short-circuit the <span class="mut">||</span>. <span class="m">Return true.</span>` });
+          decided = true; break;
+        }
+        // Branch B: skip RIGHT char -> check window [left, right-1]
+        const passB = runBranch('right', left, right-1, right, matched, s, frames, n, esc, /*firstBranch*/false);
+        push({ states:winStates(n,matched,left,right-1,right,passB),
+          carets:mark(n,{}),
+          phase: passB?'done-ok':'done-no', code: passB?10:16, result:passB,
+          msg: passB
+            ? `Branch <span class="v">skip-right</span> succeeded. <span class="m">Return true.</span>`
+            : `Both deletions failed — no single removal fixes it. <span class="x">Return false.</span>` });
+        decided = true; break;
+      }
+    }
+
+    if(!decided){
+      push({ states:mainStates(), carets:mark(n,{}), phase:'done-ok', code:10, result:true,
+        msg:`Pointers met with no mismatch — already a palindrome. <span class="m">Return true.</span>` });
+    }
+    return frames;
+  }
+
+  // build a states array for a window snapshot (used on branch-final frames)
+  function winStates(n, matched, lo, hi, skip, pass){
+    const st = Array(n).fill('');
+    matched.forEach(i => st[i]='matched');
+    st[skip] = 'skipped';
+    for(let k=lo;k<=hi;k++) if(st[k]!=='matched') st[k] = pass ? 'imatch' : 'window';
+    return st;
+  }
+
+  function mark(n, obj){
+    const arr = Array(n).fill(null);
+    for(const k in obj) arr[+k] = obj[k];
+    return arr;
+  }
+
+  // runs an inner isPalin scan, pushing frames; returns true/false
+  function runBranch(kind, lo, hi, skipIdx, matched, s, frames, n, esc, firstBranch){
+    const label = kind === 'left' ? 'skip-left' : 'skip-right';
+
+    function windowBase(){
+      const st = Array(n).fill('');
+      matched.forEach(i => st[i]='matched');
+      st[skipIdx] = 'skipped';
+      for(let k=lo;k<=hi;k++) if(st[k]!=='matched') st[k]='window';
+      return st;
+    }
+
+    // intro
+    frames.push({ states:windowBase(), carets:mark(n,{[skipIdx]: kind==='left'?'L':'R'}),
+      phase:'branch', code:13, result:null,
+      msg:`<span class="v">Try ${label}:</span> remove '${esc(s[skipIdx])}' @${skipIdx}, test substring [${lo}…${hi}] is a palindrome.` });
+
+    let i = lo, j = hi, pass = true;
+    const inner = new Set();
+
+    while(i < j){
+      const st = windowBase();
+      inner.forEach(x => st[x]='imatch');
+      st[i]='active'; st[j]='active';
+      frames.push({ states:st, carets:mark(n,{[i]:'i',[j]:'j'}), phase:'branch', code:14, result:null,
+        msg:`<span class="mut">[${label}]</span> compare '${esc(s[i])}' @${i} vs '${esc(s[j])}' @${j}` });
+
+      if(s[i] === s[j]){
+        inner.add(i); inner.add(j);
+        const st2 = windowBase(); inner.forEach(x => st2[x]='imatch');
+        frames.push({ states:st2, carets:mark(n,{[i]:'i',[j]:'j'}), phase:'branch', code:17, result:null,
+          msg:`<span class="m">✓ match</span> — narrow the window.` });
+        i++; j--;
+      } else {
+        const st3 = windowBase(); inner.forEach(x => st3[x]='imatch');
+        st3[i]='mismatch'; st3[j]='mismatch';
+        frames.push({ states:st3, carets:mark(n,{[i]:'i',[j]:'j'}), phase:'branch', code:15, result:null,
+          msg:`<span class="x">✗ mismatch</span> inside window — <span class="v">${label}</span> fails.` });
+        pass = false;
+        break;
+      }
+    }
+
+    if(pass){
+      const st = windowBase(); inner.forEach(x => st[x]='imatch');
+      for(let k=lo;k<=hi;k++) if(st[k]==='window') st[k]='imatch';
+      frames.push({ states:st, carets:mark(n,{}), phase:'branch', code:19, result:null,
+        msg:`<span class="m">Window [${lo}…${hi}] is a palindrome</span> — <span class="v">${label}</span> works.` });
+    }
+    return pass;
+  }
+
+  // ---------- DOM wiring ----------
+  const $ = id => document.getElementById(id);
+  const tapeEl=$('tape'), msgEl=$('message'), bannerEl=$('banner'),
+        pillEl=$('phasePill'), barEl=$('bar'), countEl=$('stepCount'),
+        codeEl=$('code'), inputEl=$('strInput');
+
+  let frames=[], idx=0, playing=false, timer=null, curStr='';
+
+  // render code panel once
+  (function renderCode(){
+    codeEl.innerHTML = CODE.map((line,i)=>{
+      const tx = line.map(([c,t])=>`<span class="${c}">${escapeHtml(t)}</span>`).join('');
+      return `<div class="ln" data-line="${i}"><span class="no">${i+1}</span><span class="tx">${tx}</span></div>`;
+    }).join('');
+  })();
+
+  function escapeHtml(x){return x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  function buildTape(str){
+    curStr = str;
+    tapeEl.innerHTML='';
+    for(let i=0;i<str.length;i++){
+      const col=document.createElement('div'); col.className='col'; col.dataset.i=i;
+      col.innerHTML =
+        `<div class="caret" data-caret="${i}"></div>`+
+        `<div class="cell" data-cell="${i}">${escapeHtml(str[i]===' '?'␣':str[i])}</div>`+
+        `<div class="idx" data-idx="${i}">${i}</div>`;
+      tapeEl.appendChild(col);
+    }
+  }
+
+  function render(){
+    const f = frames[idx];
+    if(!f) return;
+    for(let i=0;i<curStr.length;i++){
+      const cell=tapeEl.querySelector(`[data-cell="${i}"]`);
+      const caret=tapeEl.querySelector(`[data-caret="${i}"]`);
+      const idxLbl=tapeEl.querySelector(`[data-idx="${i}"]`);
+      const col=cell.parentElement;
+      cell.className='cell'+(f.states[i]?(' '+f.states[i]):'');
+      // caret label
+      const lab=f.carets[i];
+      if(lab){
+        const cls = (lab==='L'||lab==='i')?'pL':'pR';
+        caret.innerHTML=`<span class="p ${cls}">${lab}</span>`;
+        caret.style.opacity='1';
+      } else { caret.innerHTML=''; caret.style.opacity='0'; }
+      idxLbl.classList.toggle('on', f.states[i]==='active');
+      col.classList.toggle('dim', f.states[i]==='skipped');
+    }
+    msgEl.innerHTML=f.msg;
+
+    // phase pill
+    const pmap={scan:['scan','● scanning'],branch:['branch','⑂ branch'],
+      'done-ok':['done-ok','✓ palindrome'],'done-no':['done-no','✗ no']};
+    const [pc,ptxt]=pmap[f.phase]||['','idle'];
+    pillEl.className='phase-pill '+pc; pillEl.textContent=ptxt;
+
+    // code highlight
+    codeEl.querySelectorAll('.ln').forEach(l=>l.classList.remove('exec'));
+    const line=codeEl.querySelector(`[data-line="${f.code}"]`);
+    if(line){line.classList.add('exec');}
+
+    // result banner
+    bannerEl.className='result-banner';
+    if(idx===frames.length-1 && f.result!==null){
+      if(f.result){bannerEl.className='result-banner ok';bannerEl.innerHTML='✓ Can be a palindrome';}
+      else{bannerEl.className='result-banner no';bannerEl.innerHTML='✗ Cannot — needs &gt; 1 deletion';}
+    }
+
+    // progress
+    barEl.style.width=(frames.length<=1?100:(idx/(frames.length-1)*100))+'%';
+    countEl.textContent=`${idx+1} / ${frames.length}`;
+    $('prevBtn').disabled = idx===0;
+    $('nextBtn').disabled = idx===frames.length-1;
+  }
+
+  function run(str){
+    stop();
+    str = str;               // keep as typed (spaces allowed, shown as ␣)
+    buildTape(str);
+    frames = buildFrames(str);
+    idx=0; render();
+  }
+
+  function next(){ if(idx<frames.length-1){idx++;render();} else stop(); }
+  function prev(){ if(idx>0){idx--;render();} }
+
+  function speedMs(){ return 1150 - $('speed').value*100; } // 1..10 -> 1050..150ms
+  function play(){
+    if(idx>=frames.length-1) idx=0;
+    playing=true; $('playBtn').textContent='⏸';
+    tick();
+  }
+  function tick(){
+    render();
+    if(idx>=frames.length-1){stop();return;}
+    timer=setTimeout(()=>{idx++;tick();}, speedMs());
+  }
+  function stop(){ playing=false; clearTimeout(timer); $('playBtn').textContent='▶'; }
+  function togglePlay(){ playing?stop():play(); }
+
+  // examples — chosen to show every path
+  const EX=[
+    ['aba','clean palindrome'],
+    ['abca','delete one'],
+    ['cbbcc','fork: skip-right wins'],
+    ['abc','impossible'],
+    ['deeee','skip-left wins'],
+    ['racecar','odd palindrome'],
+    ['tebbem','both tried'],
+  ];
+  (function chips(){
+    const box=$('examples');
+    EX.forEach(([w,note])=>{
+      const c=document.createElement('button');
+      c.className='chip'; c.innerHTML=`${w}<b>${note}</b>`;
+      c.onclick=()=>{ inputEl.value=w; run(w); };
+      box.appendChild(c);
+    });
+  })();
+
+  // events
+  $('runBtn').onclick=()=>run(inputEl.value);
+  inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter') run(inputEl.value); });
+  $('nextBtn').onclick=()=>{stop();next();};
+  $('prevBtn').onclick=()=>{stop();prev();};
+  $('playBtn').onclick=togglePlay;
+  $('restartBtn').onclick=()=>{stop();idx=0;render();};
+  document.addEventListener('keydown',e=>{
+    if(document.activeElement===inputEl) return;
+    if(e.key==='ArrowRight'){stop();next();}
+    if(e.key==='ArrowLeft'){stop();prev();}
+    if(e.key===' '){e.preventDefault();togglePlay();}
+  });
+
+  // boot
+  run(inputEl.value);
+})();
+</script>
+</body>
+</html>
