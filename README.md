@@ -1,5 +1,15 @@
 # 🎯 VisualDSAcode
 
+<p align="center">
+  <a href="Two%20Pointer%20problems/index.html">
+    <img src="assets/banner.jpg" width="100%" alt="VisualDSAcode - Interactive Two Pointers Visualizers">
+  </a>
+</p>
+
+<p align="center">
+  <img src="assets/logo.jpg" width="110" alt="VisualDSAcode Logo">
+</p>
+
 > **Interactive visualizations for Data Structures & Algorithms** — built one beautiful problem at a time.
 
 <p align="center">
@@ -16,17 +26,28 @@
 
 ---
 
-## ✨ Live Gallery
+## 🎬 Demo
 
-**Open the full interactive experience:**
+<p align="center">
+  <video src="assets/demo.mp4" autoplay loop muted playsinline style="max-width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
+    Your browser does not support the video tag. 
+    <img src="assets/demo-preview.jpg" alt="Demo Preview" width="100%">
+  </video>
+</p>
 
-👉 **[Two Pointers Lab →](Two%20Pointer%20problems/index.html)**
+<p align="center">
+  <strong>Two pointers moving in real time</strong>
+</p>
 
-The gallery features:
+**Experience the full interactive gallery:**
+
+👉 **[Open Two Pointers Lab →](Two%20Pointer%20problems/index.html)**
+
+The visualizers feature:
 - Real-time pointer movement animations
 - Search + filter by category
 - Direct LeetCode links
-- Clean, modern dark theme
+- Clean, modern dark theme matching this banner
 
 ---
 
