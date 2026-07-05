@@ -10,12 +10,12 @@
   <img src="assets/logo.jpg" width="110" alt="VisualDSAcode Logo">
 </p>
 
-> **Interactive visualizations for Data Structures & Algorithms** — built one beautiful problem at a time.
+> **Interactive visualizers for mastering the Two Pointers technique** — step by step.
 
 <p align="center">
   <a href="https://github.com/Siva010/VisualDSAcode/stargazers"><img src="https://img.shields.io/github/stars/Siva010/VisualDSAcode?style=for-the-badge&color=f6c453" alt="Stars"></a>
   <a href="https://github.com/Siva010/VisualDSAcode/network/members"><img src="https://img.shields.io/github/forks/Siva010/VisualDSAcode?style=for-the-badge&color=6ea8ff" alt="Forks"></a>
-  <a href="https://github.com/Siva010/VisualDSAcode/blob/main/Two%20Pointer%20problems/index.html"><img src="https://img.shields.io/badge/Visualizers-11-37e0c4?style=for-the-badge" alt="Visualizers"></a>
+  <a href="https://github.com/Siva010/VisualDSAcode/blob/main/Two%20Pointer%20problems/index.html"><img src="https://img.shields.io/badge/Visualizers-20-37e0c4?style=for-the-badge" alt="Visualizers"></a>
   <a href="https://leetcode.com"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode"></a>
 </p>
 
