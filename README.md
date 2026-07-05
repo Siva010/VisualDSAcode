@@ -51,21 +51,13 @@ The visualizers feature:
 
 ---
 
-## 📚 Available Visualizers
+## 📚 Visualizers
 
-| #   | Problem                              | Category                    | Pattern                  | LeetCode | Visualizer |
-|-----|--------------------------------------|-----------------------------|--------------------------|----------|------------|
-| 1   | Two Sum                              | Foundations                 | Hash Map → Two Pointers  | [#1](https://leetcode.com/problems/two-sum/) | [Open](Two%20Pointer%20problems/two-sum-visualizer.html) |
-| 167 | Two Sum II — Sorted Array            | Basic Two Pointers          | Two Pointers             | [#167](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/) | [Open](Two%20Pointer%20problems/two-sum-ii-visualizer.html) |
-| 344 | Reverse String                       | Basic Two Pointers          | Two Pointers             | [#344](https://leetcode.com/problems/reverse-string/) | [Open](Two%20Pointer%20problems/reverse-string-visualizer.html) |
-| 680 | Valid Palindrome II                  | Basic Two Pointers          | Two Pointers + Branch    | [#680](https://leetcode.com/problems/valid-palindrome-ii/) | [Open](Two%20Pointer%20problems/valid-palindrome-visualizer.html) |
-| 141 | Linked List Cycle                    | Linked List Two Pointers    | Fast & Slow              | [#141](https://leetcode.com/problems/linked-list-cycle/) | [Open](Two%20Pointer%20problems/linked-list-cycle-visualizer.html) |
-| 876 | Middle of the Linked List            | Linked List Two Pointers    | Fast & Slow              | [#876](https://leetcode.com/problems/middle-of-the-linked-list/) | [Open](Two%20Pointer%20problems/middle-of-linked-list-visualizer.html) |
-| 19  | Remove Nth Node From End             | Linked List Two Pointers    | Fast & Slow + Gap        | [#19](https://leetcode.com/problems/remove-nth-node-from-end-of-list/) | [Open](Two%20Pointer%20problems/remove-nth-node-visualizer.html) |
-| 15  | 3Sum                                 | Advanced Two Pointers       | Fixed + Two Pointers     | [#15](https://leetcode.com/problems/3sum/) | [Open](Two%20Pointer%20problems/3sum-visualizer.html) |
-| 11  | Container With Most Water            | Advanced Two Pointers       | Two Pointers             | [#11](https://leetcode.com/problems/container-with-most-water/) | [Open](Two%20Pointer%20problems/container-with-most-water-visualizer.html) |
-| 75  | Sort Colors                          | Partitioning & Window       | Dutch National Flag      | [#75](https://leetcode.com/problems/sort-colors/) | [Open](Two%20Pointer%20problems/sort-colors-visualizer.html) |
-| 42  | Trapping Rain Water                  | Partitioning & Window       | Two Pointers + Running Max | [#42](https://leetcode.com/problems/trapping-rain-water/) | [Open](Two%20Pointer%20problems/trapping-rain-water-visualizer.html) |
+All visualizers live in the interactive gallery (always up to date):
+
+👉 **[Browse 20+ visualizers →](Two%20Pointer%20problems/index.html)**
+
+New additions include 3Sum Closest, 4Sum, Valid Triangle Number, Reverse Vowels, Generalized kSum, and more.
 
 > All visualizers are built and verified against real test cases.
 
