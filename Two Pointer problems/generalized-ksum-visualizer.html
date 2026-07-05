@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generalized kSum · Recursive Two-Pointer Visualizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b111d; --ink-2:#111a2b; --panel:#151f33; --panel-2:#1a2740;
+    --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
+    --mint:#37e0c4; --mint-deep:#0f2f2c; --gold:#f6c453; --gold-deep:#33290b;
+    --coral:#ff6f61; --coral-deep:#3a1512; --blue:#6ea8ff; --violet:#b78bff;
+    --lvl0:#ffb454; --lvl0-deep:#3a2a0d;
+    --lvl1:#ff8fb0; --lvl1-deep:#3a1424;
+    --lvl2:#7ee0e0; --lvl2-deep:#0d3232;
+    --lvl3:#c8f06a; --lvl3-deep:#2a3308;
+    --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:radial-gradient(1200px 600px at 15% -10%, #16233b 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #191330 0%, transparent 50%),var(--ink);
+    color:var(--txt);font-family:var(--display);-webkit-font-smoothing:antialiased;min-height:100%}
+  body{padding:28px 20px 64px;max-width:1200px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--coral);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .eyebrow .tag{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px;letter-spacing:.12em;font-size:11px}
+  h1{font-size:clamp(30px,5vw,50px);font-weight:700;line-height:1.02;letter-spacing:-.02em}
+  h1 .thin{color:var(--muted);font-weight:400}
+  .lede{color:var(--muted);max-width:700px;margin-top:14px;font-size:15.5px;line-height:1.55}
+  .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);padding:1px 6px;border-radius:6px;font-size:.9em}
+  .controls-top{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  .field{flex:1;min-width:220px}
+  .field.small{flex:0 0 120px;min-width:100px}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  input[type=text],input[type=number]{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
+    font-family:var(--mono);font-size:16px;letter-spacing:.05em;padding:14px 16px;border-radius:12px;outline:none;transition:border-color .2s, box-shadow .2s}
+  input:focus{border-color:var(--coral);box-shadow:0 0 0 4px rgba(255,111,97,.14)}
+  .btn{font-family:var(--display);font-weight:600;font-size:15px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);border-radius:12px;padding:0 20px;height:52px;cursor:pointer;
+    transition:transform .12s, background .2s, border-color .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:9px}
+  .btn:hover{background:var(--panel-2)} .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(180deg,#ff9186,#f04f42);color:#2b0704;border:none;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{font-family:var(--mono);font-size:13px;letter-spacing:.03em;color:var(--muted);
+    background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;padding:6px 13px;cursor:pointer;transition:.18s}
+  .chip:hover{color:var(--txt);border-color:var(--coral);background:var(--coral-deep)}
+  .chip b{color:var(--muted-2);font-weight:400;margin-left:7px}
+  .grid{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;margin-top:26px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;
+    border-bottom:1px solid var(--line);background:rgba(255,255,255,.012)}
+  .card-head h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .phase-pill{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .phase-pill.fix{color:var(--coral);border-color:#4a2017;background:var(--coral-deep)}
+  .phase-pill.base{color:var(--blue);border-color:#294066;background:#0f1f3a}
+  .phase-pill.found{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.done{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .stage{padding:22px 16px 16px;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+
+  .stack-line{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:26px;font-family:var(--mono);font-size:12.5px}
+  .stack-chip{border-radius:999px;padding:4px 11px;display:flex;align-items:center;gap:6px;border:1px solid currentColor}
+  .stack-chip .badge{width:16px;height:16px;border-radius:50%;background:currentColor;color:var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .stack-arrow{color:var(--muted-2);align-self:center}
+
+  .tape{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .col{display:flex;flex-direction:column;align-items:center;gap:6px;width:44px}
+  @media (max-width:600px){.col{width:33px}}
+  .caret{height:20px;font-family:var(--mono);font-size:10px;font-weight:700;
+    display:flex;gap:2px;align-items:center;justify-content:center;transition:opacity .2s}
+  .caret .p{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px}
+  .caret .pL{background:var(--blue);color:#04121f} .caret .pR{background:var(--violet);color:#100420}
+  .cell{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:16px;font-weight:600;border-radius:10px;background:var(--ink-2);border:1.5px solid var(--line);
+    color:var(--txt);transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .25s,border-color .25s,color .25s,box-shadow .25s}
+  @media (max-width:600px){.cell{font-size:12.5px}}
+  .idx{font-family:var(--mono);font-size:9px;color:var(--muted-2)}
+  .cell.lvl0{background:var(--lvl0-deep);border-color:var(--lvl0);color:var(--lvl0);transform:translateY(-5px) scale(1.04)}
+  .cell.lvl1{background:var(--lvl1-deep);border-color:var(--lvl1);color:var(--lvl1);transform:translateY(-5px) scale(1.04)}
+  .cell.lvl2{background:var(--lvl2-deep);border-color:var(--lvl2);color:var(--lvl2);transform:translateY(-5px) scale(1.04)}
+  .cell.lvl3{background:var(--lvl3-deep);border-color:var(--lvl3);color:var(--lvl3);transform:translateY(-5px) scale(1.04)}
+  .cell.left{background:#0f1f3a;border-color:var(--blue);color:var(--blue);transform:translateY(-3px) scale(1.03)}
+  .cell.right{background:#1c1430;border-color:var(--violet);color:var(--violet);transform:translateY(-3px) scale(1.03)}
+  .cell.found{background:var(--mint-deep);border-color:var(--mint);color:var(--mint);box-shadow:0 10px 22px -12px var(--mint)}
+  .cell.dupskip{background:var(--coral-deep);border-color:var(--coral);color:var(--coral)}
+
+  .sum-line{font-family:var(--mono);font-size:14px;color:var(--muted)}
+  .sum-line b{color:var(--txt)}
+  .message{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--txt);text-align:center;max-width:720px;min-height:44px;padding:0 6px}
+  .message .m{color:var(--mint)} .message .x{color:var(--coral)} .message .l{color:var(--blue)} .message .r{color:var(--violet)}
+  .tuples{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:720px;max-height:90px;overflow-y:auto}
+  .tuple{font-family:var(--mono);font-size:12px;color:var(--mint);background:var(--mint-deep);border:1px solid #1c5b52;
+    border-radius:999px;padding:4px 11px;animation:pop .35s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .transport{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap;background:rgba(255,255,255,.012)}
+  .icon-btn{width:44px;height:44px;padding:0;justify-content:center;font-size:16px}
+  .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:6px;background:var(--ink-2);border-radius:999px;overflow:hidden;border:1px solid var(--line-soft)}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--lvl2));transition:width .2s}
+  .step-count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .speed{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+  .speed input{accent-color:var(--coral);width:96px}
+  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:11.2px;line-height:1.58;overflow-x:auto;max-height:520px;overflow-y:auto}
+  .code .ln{display:flex;padding:1px 18px 1px 0;white-space:pre;position:relative;transition:background .18s}
+  .code .ln .no{width:28px;text-align:right;padding-right:12px;color:#3f5170;user-select:none;flex-shrink:0}
+  .code .kw{color:#ff9db1} .code .ty{color:#7fd0ff} .code .fn{color:#f6c453} .code .tx{color:#c6d4ee}
+  .code .ln.exec{background:linear-gradient(90deg,rgba(255,111,97,.16),transparent 82%)}
+  .code .ln.exec .no{color:var(--coral)}
+  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:16px;background:var(--coral);border-radius:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 10px;padding:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:9px;height:9px;border-radius:4px;border:1.5px solid}
+  .dot.l0{background:var(--lvl0-deep);border-color:var(--lvl0)} .dot.l1{background:var(--lvl1-deep);border-color:var(--lvl1)}
+  .dot.l2{background:var(--lvl2-deep);border-color:var(--lvl2)} .dot.l3{background:var(--lvl3-deep);border-color:var(--lvl3)}
+  .dot.lb{background:#0f1f3a;border-color:var(--blue)} .dot.rb{background:#1c1430;border-color:var(--violet)}
+  .dot.m{background:var(--mint-deep);border-color:var(--mint)}
+  .foot{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">Opposite-Ends Two Pointers <span class="tag">Generalized</span></div>
+  <h1>Generalized kSum <span class="thin">/ visualized</span></h1>
+  <p class="lede">
+    2Sum, 3Sum, and 4Sum are the same idea at different depths: fix pointers one at a time,
+    and once only <b>two</b> free slots remain, collapse to the familiar converging two-pointer
+    scan. Pick any <code>k</code> and watch the recursion stack grow and shrink.
+  </p>
+
+  <div class="controls-top">
+    <div class="field">
+      <label for="arrInput">Array (comma-separated)</label>
+      <input id="arrInput" type="text" value="1, 0, -1, 0, -2, 2" spellcheck="false" autocomplete="off">
+    </div>
+    <div class="field small">
+      <label for="targetInput">Target</label>
+      <input id="targetInput" type="number" value="0">
+    </div>
+    <div class="field small">
+      <label for="kInput">k</label>
+      <input id="kInput" type="number" value="4" min="2" max="6">
+    </div>
+    <button class="btn primary" id="runBtn">▶ Run</button>
+  </div>
+  <div class="examples" id="examples"></div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><h2>Execution</h2><span class="phase-pill" id="phasePill">idle</span></div>
+      <div class="stage">
+        <div class="stack-line" id="stackLine"></div>
+        <div class="tape" id="tape"></div>
+        <div class="sum-line" id="sumLine"></div>
+        <div class="message" id="message">Press <span class="k">Run</span> to begin.</div>
+        <div class="tuples" id="tuples"></div>
+      </div>
+      <div class="transport">
+        <button class="btn icon-btn" id="prevBtn" title="Previous">⏴</button>
+        <button class="btn icon-btn" id="playBtn" title="Play / Pause">▶</button>
+        <button class="btn icon-btn" id="nextBtn" title="Next">⏵</button>
+        <button class="btn icon-btn" id="restartBtn" title="Restart">⟲</button>
+        <div class="progress-wrap">
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <span class="step-count" id="stepCount">0 / 0</span>
+        </div>
+        <div class="speed">Speed<input type="range" id="speed" min="1" max="10" value="7"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Java · running line</h2></div>
+      <div class="code" id="code"></div>
+      <div class="legend">
+        <span><i class="dot l0"></i>level 1</span>
+        <span><i class="dot l1"></i>level 2</span>
+        <span><i class="dot l2"></i>level 3</span>
+        <span><i class="dot l3"></i>level 4</span>
+        <span><i class="dot lb"></i>left</span>
+        <span><i class="dot rb"></i>right</span>
+        <span><i class="dot m"></i>found</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">O(n^(k-1)) time · O(k) recursion depth &nbsp;·&nbsp; k−2 nested fixed pointers, then one O(n) two-pointer pass.</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const CODE = [
+    [['ty','List<List<Integer>> '],['fn','kSum'],['tx','('],['kw','int'],['tx','[] nums, '],['kw','int '],['tx','target, '],['kw','int '],['tx','k) {']],
+    [['tx','    Arrays.sort(nums);']],
+    [['tx','    '],['kw','return '],['fn','kSumHelper'],['tx','(nums, target, k, 0);']],
+    [['tx','}']],
+    [['tx','']],
+    [['ty','List<List<Integer>> '],['fn','kSumHelper'],['tx','('],['kw','int'],['tx','[] nums, '],['kw','long '],['tx','target, '],['kw','int '],['tx','k, '],['kw','int '],['tx','start) {']],
+    [['tx','    '],['ty','List<List<Integer>> '],['tx','res = '],['kw','new '],['tx','ArrayList<>();']],
+    [['tx','    '],['kw','int '],['tx','n = nums.length;']],
+    [['tx','    '],['kw','if '],['tx','(k == 2) {']],
+    [['tx','        '],['kw','int '],['tx','left = start, right = n - 1;']],
+    [['tx','        '],['kw','while '],['tx','(left < right) {']],
+    [['tx','            '],['kw','long '],['tx','sum = nums[left] + nums[right];']],
+    [['tx','            '],['kw','if '],['tx','(sum == target) {']],
+    [['tx','                res.add(List.of(nums[left], nums[right]));']],
+    [['tx','                left++; right--;']],
+    [['tx','                '],['kw','while '],['tx','(left<right && nums[left]==nums[left-1]) left++;']],
+    [['tx','                '],['kw','while '],['tx','(left<right && nums[right]==nums[right+1]) right--;']],
+    [['tx','            } '],['kw','else if '],['tx','(sum < target) left++;']],
+    [['tx','            '],['kw','else '],['tx','right--;']],
+    [['tx','        }']],
+    [['tx','        '],['kw','return '],['tx','res;']],
+    [['tx','    }']],
+    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','i = start; i <= n - k; i++) {']],
+    [['tx','        '],['kw','if '],['tx','(i > start && nums[i] == nums[i-1]) '],['kw','continue'],['tx',';']],
+    [['tx','        '],['kw','for '],['tx','(List<Integer> tail : '],['fn','kSumHelper'],['tx','(nums, target-nums[i], k-1, i+1)) {']],
+    [['tx','            combo = [nums[i]] + tail;  res.add(combo);']],
+    [['tx','        }']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['tx','res;']],
+    [['tx','}']]
+  ];
+
+  const LEVELS = ['lvl0','lvl1','lvl2','lvl3'];
+
+  function buildFrames(rawNums, target, k){
+    const nums = [...rawNums].sort((a,b)=>a-b);
+    const n = nums.length, frames = [];
+    const tuples = [];
+
+    frames.push({arr:nums.slice(), stack:[], left:-1,right:-1, phase:'fix', code:1, tuples:[],
+      msg:`<span class="k">Arrays.sort(nums)</span>. Reducing <b>${k}Sum</b> to ${k-2} fixed pointer${k-2===1?'':'s'} + a base 2-pointer scan.`});
+
+    if(n<k || k<2){
+      frames.push({arr:nums.slice(), stack:[], left:-1,right:-1, phase:'done', code:30, tuples:[],
+        msg:`Not enough elements for k=${k}.`});
+      return frames;
+    }
+
+    function helper(start, remTarget, remK, stack){
+      if(remK===2){
+        let left=start, right=n-1;
+        frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:9, tuples:tuples.slice(),
+          msg:`Base case (k=2): scan [${start}…${n-1}] for a pair summing to <b>${remTarget}</b>.`});
+        while(left<right){
+          const sum = nums[left]+nums[right];
+          frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:11, tuples:tuples.slice(), sum,
+            msg:`sum = ${nums[left]} + ${nums[right]} = <b>${sum}</b> vs target ${remTarget}`});
+          if(sum===remTarget){
+            const tuple = [...stack.map(s=>s.val), nums[left], nums[right]];
+            tuples.push(tuple);
+            frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'found', code:13, tuples:tuples.slice(), justFound:true,
+              msg:`<span class="m">Match!</span> record [${tuple.join(', ')}].`});
+            left++; right--;
+            frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:14, tuples:tuples.slice(),
+              msg:`Advance both: <span class="l">left++</span>, <span class="r">right--</span>.`});
+            while(left<right && nums[left]===nums[left-1]){
+              frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:15, tuples:tuples.slice(), dupL:true,
+                msg:`Duplicate at <span class="l">left</span> — skip.`});
+              left++;
+            }
+            while(left<right && nums[right]===nums[right+1]){
+              frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:16, tuples:tuples.slice(), dupR:true,
+                msg:`Duplicate at <span class="r">right</span> — skip.`});
+              right--;
+            }
+          } else if(sum<remTarget){
+            frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:17, tuples:tuples.slice(),
+              msg:`Too small — <span class="l">left++</span>.`});
+            left++;
+          } else {
+            frames.push({arr:nums.slice(), stack:stack.slice(), left, right, phase:'base', code:18, tuples:tuples.slice(),
+              msg:`Too big — <span class="r">right--</span>.`});
+            right--;
+          }
+        }
+        frames.push({arr:nums.slice(), stack:stack.slice(), left:-1,right:-1, phase:'base', code:20, tuples:tuples.slice(),
+          msg:`Base case scan complete for this branch.`});
+        return;
+      }
+
+      const level = stack.length;
+      for(let i=start; i<=n-remK; i++){
+        if(i>start && nums[i]===nums[i-1]){
+          frames.push({arr:nums.slice(), stack:stack.slice(), left:-1,right:-1, phase:'fix', code:23, tuples:tuples.slice(), skipIdx:i,
+            msg:`<span class="x">Duplicate</span> at index ${i} (val ${nums[i]}) — same as previous at this level. Skip.`});
+          continue;
+        }
+        const newStack = [...stack, {idx:i, val:nums[i], level}];
+        frames.push({arr:nums.slice(), stack:newStack.slice(), left:-1,right:-1, phase:'fix', code:24, tuples:tuples.slice(),
+          msg:`Fix level ${level+1} at index ${i} (val <b>${nums[i]}</b>). Remaining target = ${remTarget-nums[i]}, remaining k = ${remK-1}.`});
+        helper(i+1, remTarget-nums[i], remK-1, newStack);
+      }
+    }
+
+    helper(0, target, k, []);
+
+    frames.push({arr:nums.slice(), stack:[], left:-1,right:-1, phase:'done', code:30, tuples:tuples.slice(),
+      msg: tuples.length
+        ? `<span class="m">Found ${tuples.length} tuple${tuples.length>1?'s':''} of size ${k}.</span>`
+        : `<span class="x">No ${k}-tuple sums to ${target}.</span>`});
+    return frames;
+  }
+
+  const $ = id => document.getElementById(id);
+  const tapeEl=$('tape'), msgEl=$('message'), pillEl=$('phasePill'),
+        barEl=$('bar'), countEl=$('stepCount'), codeEl=$('code'),
+        arrEl=$('arrInput'), targetEl=$('targetInput'), kEl=$('kInput'),
+        sumLineEl=$('sumLine'), tupleEl=$('tuples'), stackLineEl=$('stackLine');
+  let frames=[], idx=0, playing=false, timer=null, curArr=[];
+
+  (function renderCode(){
+    codeEl.innerHTML = CODE.map((line,i)=>{
+      const tx = line.map(([c,t])=>`<span class="${c}">${esc(t)}</span>`).join('');
+      return `<div class="ln" data-line="${i}"><span class="no">${i+1}</span>${tx}</div>`;
+    }).join('');
+  })();
+  function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function parseArr(str){ return str.split(',').map(s=>s.trim()).filter(s=>s!=='').map(Number).filter(x=>!isNaN(x)).slice(0,9); }
+
+  function buildTape(len){
+    tapeEl.innerHTML='';
+    for(let k=0;k<len;k++){
+      const col=document.createElement('div'); col.className='col';
+      col.innerHTML = `<div class="caret" data-caret="${k}"></div>`+
+        `<div class="cell" data-cell="${k}"></div>`+
+        `<div class="idx" data-idx="${k}">${k}</div>`;
+      tapeEl.appendChild(col);
+    }
+  }
+
+  function levelColorVar(level){
+    return `var(--${LEVELS[Math.min(level,LEVELS.length-1)]})`;
+  }
+
+  function render(){
+    const f = frames[idx]; if(!f) return;
+    curArr = f.arr;
+
+    // stack breadcrumb
+    stackLineEl.innerHTML = f.stack.map((s,ix)=>{
+      const color = levelColorVar(s.level);
+      return `${ix>0?'<span class="stack-arrow">→</span>':''}<span class="stack-chip" style="color:${color}"><span class="badge">${s.level+1}</span>idx ${s.idx} = ${s.val}</span>`;
+    }).join('');
+
+    for(let k=0;k<f.arr.length;k++){
+      const cell=tapeEl.querySelector(`[data-cell="${k}"]`);
+      const caret=tapeEl.querySelector(`[data-caret="${k}"]`);
+      cell.textContent = f.arr[k];
+      let cls='cell';
+      const stackEntry = f.stack.find(s=>s.idx===k);
+      if(stackEntry) cls += ' ' + LEVELS[Math.min(stackEntry.level, LEVELS.length-1)];
+      if(k===f.left) cls += f.dupL ? ' dupskip' : ' left';
+      if(k===f.right) cls += f.dupR ? ' dupskip' : ' right';
+      if(k===f.skipIdx) cls += ' dupskip';
+      if(f.justFound && (stackEntry || k===f.left || k===f.right)) cls += ' found';
+      cell.className=cls;
+      caret.innerHTML='';
+      if(stackEntry) caret.innerHTML = `<span class="p" style="background:${levelColorVar(stackEntry.level)};color:var(--ink)">${stackEntry.level+1}</span>`;
+      if(k===f.left) caret.innerHTML = '<span class="p pL">L</span>';
+      if(k===f.right) caret.innerHTML = '<span class="p pR">R</span>';
+      caret.style.opacity = caret.innerHTML ? '1' : '0';
+    }
+
+    sumLineEl.innerHTML = (f.sum!==undefined) ? `pair sum = <b>${f.sum}</b>` : '';
+    msgEl.innerHTML = f.msg;
+    tupleEl.innerHTML = f.tuples.map(t=>`<span class="tuple">[${t.join(', ')}]</span>`).join('');
+
+    const pmap={fix:['fix','◆ fixing'],base:['base','● base case'],found:['found','✓ match'],done:['done','■ complete']};
+    const [pc,ptxt]=pmap[f.phase]||['','idle'];
+    pillEl.className='phase-pill '+pc; pillEl.textContent=ptxt;
+
+    codeEl.querySelectorAll('.ln').forEach(l=>l.classList.remove('exec'));
+    const line=codeEl.querySelector(`[data-line="${f.code}"]`); if(line){ line.classList.add('exec'); line.scrollIntoView({block:'nearest'}); }
+
+    barEl.style.width=(frames.length<=1?100:(idx/(frames.length-1)*100))+'%';
+    countEl.textContent=`${idx+1} / ${frames.length}`;
+    $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx===frames.length-1;
+  }
+
+  function run(){
+    stop();
+    const arr = parseArr(arrEl.value);
+    const target = parseInt(targetEl.value)||0;
+    let k = parseInt(kEl.value)||2;
+    k = Math.max(2, Math.min(k, 6));
+    kEl.value = k;
+    buildTape(arr.length);
+    frames = buildFrames(arr, target, k);
+    idx=0; render();
+  }
+  function next(){ if(idx<frames.length-1){idx++;render();} else stop(); }
+  function prev(){ if(idx>0){idx--;render();} }
+  function speedMs(){ return 900 - $('speed').value*75; }
+  function play(){ if(idx>=frames.length-1) idx=0; playing=true; $('playBtn').textContent='⏸'; tick(); }
+  function tick(){ render(); if(idx>=frames.length-1){stop();return;} timer=setTimeout(()=>{idx++;tick();}, speedMs()); }
+  function stop(){ playing=false; clearTimeout(timer); $('playBtn').textContent='▶'; }
+  function togglePlay(){ playing?stop():play(); }
+
+  const EX=[
+    {v:'2, 7, 11, 15', t:9, k:2, note:'k=2 → plain two pointers'},
+    {v:'-1, 0, 1, 2, -1, -4', t:0, k:3, note:'k=3 → 3Sum'},
+    {v:'1, 0, -1, 0, -2, 2', t:0, k:4, note:'k=4 → 4Sum'},
+    {v:'1, 2, 3, 4, 5, 6, 7', t:20, k:5, note:'k=5 → one deeper'},
+  ];
+  (function chips(){
+    const box=$('examples');
+    EX.forEach(ex=>{
+      const c=document.createElement('button'); c.className='chip';
+      c.innerHTML=`k=${ex.k}, target=${ex.t}<b>${ex.note}</b>`;
+      c.onclick=()=>{ arrEl.value=ex.v; targetEl.value=ex.t; kEl.value=ex.k; run(); };
+      box.appendChild(c);
+    });
+  })();
+
+  $('runBtn').onclick=run;
+  [arrEl,targetEl,kEl].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')run();}));
+  $('nextBtn').onclick=()=>{stop();next();};
+  $('prevBtn').onclick=()=>{stop();prev();};
+  $('playBtn').onclick=togglePlay;
+  $('restartBtn').onclick=()=>{stop();idx=0;render();};
+  document.addEventListener('keydown',e=>{
+    if([arrEl,targetEl,kEl].includes(document.activeElement)) return;
+    if(e.key==='ArrowRight'){stop();next();}
+    if(e.key==='ArrowLeft'){stop();prev();}
+    if(e.key===' '){e.preventDefault();togglePlay();}
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>

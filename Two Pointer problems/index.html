@@ -75,6 +75,8 @@
 
   /* ---------- filter chips ---------- */
   .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .core-note{font-family:var(--mono);font-size:12px;color:var(--muted-2);margin-top:12px}
+  .core-note b{color:var(--gold)}
   .fchip{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;color:var(--muted);
     background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;padding:7px 14px;
     cursor:pointer;transition:.18s;display:flex;align-items:center;gap:7px}
@@ -96,6 +98,12 @@
     position:relative;overflow:hidden}
   .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--mint))}
   .card:hover{transform:translateY(-3px);border-color:var(--line-soft);background:var(--panel-2)}
+  .card.core{border-color:#4a3d17;background:linear-gradient(180deg, rgba(246,196,83,.05), var(--panel) 40%)}
+  .card.core::before{width:4px;background:var(--gold)}
+  .card.core:hover{border-color:var(--gold);background:linear-gradient(180deg, rgba(246,196,83,.09), var(--panel-2) 40%)}
+  .core-badge{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gold);background:var(--gold-deep);border:1px solid #4a3d17;border-radius:999px;
+    padding:2px 8px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
   .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .lc-tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--accent,var(--mint));
     border:1px solid currentColor;border-radius:999px;padding:2px 9px;opacity:.9}
@@ -165,6 +173,7 @@
       </svg>
     </div>
     <div class="filters" id="filters"></div>
+    <div class="core-note" id="coreNote">★ <b>Core Curriculum</b> — the original 10-problem study track. Everything else branched off one of these.</div>
   </div>
 
   <div id="categories"></div>
@@ -198,6 +207,8 @@
       desc:'A fixed pointer plus a converging pair, or a pointer choice driven by a running invariant.' },
     { id:'partition',   num:'04', title:'Partitioning & Window', accent:'var(--violet)',
       desc:'Pointers that carve the array into zones in a single linear pass.' },
+    { id:'oppends',      num:'05', title:'Opposite-Ends / Converging Pointers', accent:'var(--coral)',
+      desc:'The core recipe stretched further — closest sums, counting sums, and generalized k-way sums.' },
   ];
 
   const PROBLEMS = [
@@ -206,55 +217,100 @@
       hook:'One pass, check the complement before inserting — O(n) time, O(n) space.',
       leetcode:'https://leetcode.com/problems/two-sum/', status:'done' },
 
-    { id:'two-sum-ii', num:167, title:'Two Sum II — Sorted Array', category:'basic',
+    { id:'two-sum-ii', num:167, title:'Two Sum II — Sorted Array', category:'basic', core:true,
       pattern:'Two Pointers', file:'two-sum-ii-visualizer.html',
       hook:'Sorted input turns the hash map into two indices converging from the ends.',
       leetcode:'https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/', status:'done' },
 
-    { id:'valid-palindrome-2', num:680, title:'Valid Palindrome II', category:'basic',
+    { id:'valid-palindrome-2', num:680, title:'Valid Palindrome II', category:'basic', core:true,
       pattern:'Two Pointers + Branch', file:'valid-palindrome-visualizer.html',
       hook:'On a mismatch, fork: try skipping left, then try skipping right.',
       leetcode:'https://leetcode.com/problems/valid-palindrome-ii/', status:'done' },
 
-    { id:'reverse-string', num:344, title:'Reverse String', category:'basic',
+    { id:'reverse-string', num:344, title:'Reverse String', category:'basic', core:true,
       pattern:'Two Pointers', file:'reverse-string-visualizer.html',
       hook:'In-place swap, inward — the textbook two-pointer warm-up.',
       leetcode:'https://leetcode.com/problems/reverse-string/', status:'done' },
 
-    { id:'linked-list-cycle', num:141, title:'Linked List Cycle', category:'linkedlist',
+    { id:'linked-list-cycle', num:141, title:'Linked List Cycle', category:'linkedlist', core:true,
       pattern:'Fast & Slow', file:'linked-list-cycle-visualizer.html',
       hook:"Floyd's tortoise and hare — a collision proves a loop exists.",
       leetcode:'https://leetcode.com/problems/linked-list-cycle/', status:'done' },
 
-    { id:'middle-of-ll', num:876, title:'Middle of the Linked List', category:'linkedlist',
+    { id:'middle-of-ll', num:876, title:'Middle of the Linked List', category:'linkedlist', core:true,
       pattern:'Fast & Slow', file:'middle-of-linked-list-visualizer.html',
       hook:'Fast runs out of road exactly when slow lands on the middle.',
       leetcode:'https://leetcode.com/problems/middle-of-the-linked-list/', status:'done' },
 
-    { id:'remove-nth-node', num:19, title:'Remove Nth Node From End', category:'linkedlist',
+    { id:'remove-nth-node', num:19, title:'Remove Nth Node From End', category:'linkedlist', core:true,
       pattern:'Fast & Slow + Gap', file:'remove-nth-node-visualizer.html',
       hook:'A dummy node and an n-node gap turn removal into one pass.',
       leetcode:'https://leetcode.com/problems/remove-nth-node-from-end-of-list/', status:'done' },
 
-    { id:'3sum', num:15, title:'3Sum', category:'advanced',
+    { id:'3sum', num:15, title:'3Sum', category:'advanced', core:true,
       pattern:'Fixed + Two Pointers', file:'3sum-visualizer.html',
       hook:'Sort, fix i, then slide left/right inward — with two separate duplicate guards.',
       leetcode:'https://leetcode.com/problems/3sum/', status:'done' },
 
-    { id:'container-water', num:11, title:'Container With Most Water', category:'advanced',
+    { id:'container-water', num:11, title:'Container With Most Water', category:'advanced', core:true,
       pattern:'Two Pointers', file:'container-with-most-water-visualizer.html',
       hook:'Always move the shorter wall — moving the taller one can only shrink the area.',
       leetcode:'https://leetcode.com/problems/container-with-most-water/', status:'done' },
 
-    { id:'sort-colors', num:75, title:'Sort Colors', category:'partition',
+    { id:'sort-colors', num:75, title:'Sort Colors', category:'partition', core:true,
       pattern:'Dutch National Flag', file:'sort-colors-visualizer.html',
       hook:'Three pointers, one pass — low / mid / high carve out three zones.',
       leetcode:'https://leetcode.com/problems/sort-colors/', status:'done' },
 
-    { id:'trapping-rain-water', num:42, title:'Trapping Rain Water', category:'partition',
+    { id:'trapping-rain-water', num:42, title:'Trapping Rain Water', category:'partition', core:true,
       pattern:'Two Pointers + Running Max', file:'trapping-rain-water-visualizer.html',
       hook:'The smaller wall’s water level is always fully determined — settle it and move on.',
       leetcode:'https://leetcode.com/problems/trapping-rain-water/', status:'done' },
+
+    { id:'squares-sorted-array', num:977, title:'Squares of a Sorted Array', category:'oppends',
+      pattern:'Two Pointers', file:'squares-sorted-array-visualizer.html',
+      hook:'Negatives square into big positives — the largest square is always at one end.',
+      leetcode:'https://leetcode.com/problems/squares-of-a-sorted-array/', status:'done' },
+
+    { id:'reverse-vowels', num:345, title:'Reverse Vowels of a String', category:'oppends',
+      pattern:'Two Pointers', file:'reverse-vowels-visualizer.html',
+      hook:'Same inward swap as Reverse String, but skip past consonants first.',
+      leetcode:'https://leetcode.com/problems/reverse-vowels-of-a-string/', status:'done' },
+
+    { id:'valid-palindrome', num:125, title:'Valid Palindrome', category:'oppends',
+      pattern:'Two Pointers', file:'valid-palindrome-1-visualizer.html',
+      hook:'Skip non-alphanumeric characters, compare case-insensitively, no deletions allowed.',
+      leetcode:'https://leetcode.com/problems/valid-palindrome/', status:'done' },
+
+    { id:'two-sum-less-than-k', num:1099, title:'Two Sum Less Than K', category:'oppends',
+      pattern:'Two Pointers', file:'two-sum-less-than-k-visualizer.html',
+      hook:'No early exit here — every sum under k is a candidate, not necessarily the best.',
+      leetcode:'https://leetcode.com/problems/two-sum-less-than-k/', status:'done' },
+
+    { id:'3sum-closest', num:16, title:'3Sum Closest', category:'oppends',
+      pattern:'Fixed + Two Pointers', file:'3sum-closest-visualizer.html',
+      hook:'Track whichever sum has landed nearest the target — an exact hit just short-circuits early.',
+      leetcode:'https://leetcode.com/problems/3sum-closest/', status:'done' },
+
+    { id:'3sum-smaller', num:259, title:'3Sum Smaller', category:'oppends',
+      pattern:'Fixed + Two Pointers (Counting)', file:'3sum-smaller-visualizer.html',
+      hook:'Count, don’t collect — one valid pair means every value between left and right also counts.',
+      leetcode:'https://leetcode.com/problems/3sum-smaller/', status:'done' },
+
+    { id:'4sum', num:18, title:'4Sum', category:'oppends',
+      pattern:'Two Fixed + Two Pointers', file:'4sum-visualizer.html',
+      hook:'3Sum with one more nested fixed pointer — and one more duplicate guard.',
+      leetcode:'https://leetcode.com/problems/4sum/', status:'done' },
+
+    { id:'generalized-ksum', num:null, title:'Generalized kSum', category:'oppends',
+      pattern:'Recursive Two Pointers', file:'generalized-ksum-visualizer.html',
+      hook:'2Sum, 3Sum, 4Sum are one recursive pattern — fix pointers until two slots remain.',
+      leetcode:null, status:'done' },
+
+    { id:'valid-triangle-number', num:611, title:'Valid Triangle Number', category:'oppends',
+      pattern:'Fixed + Two Pointers (Counting)', file:'valid-triangle-number-visualizer.html',
+      hook:'Fix the largest side; one valid pair means every value between left and right also works.',
+      leetcode:'https://leetcode.com/problems/valid-triangle-number/', status:'done' },
 
     // ---- append new problems above this line ----
   ];
@@ -273,11 +329,15 @@
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function buildFilters(){
-    const chips = [{id:'all', title:'All problems', accent:'var(--txt)'}, ...CATEGORIES];
+    const chips = [
+      {id:'all', title:'All problems', accent:'var(--txt)'},
+      {id:'core', title:'★ Core Curriculum', accent:'var(--gold)'},
+      ...CATEGORIES
+    ];
     filtersEl.innerHTML = chips.map(c => `
       <button class="fchip${c.id===activeFilter?' active':''}" data-filter="${c.id}"
         style="${c.id===activeFilter ? `background:${c.accent};border-color:${c.accent};color:var(--ink);` : ''}">
-        ${c.id==='all' ? '' : `<span class="sw" style="background:${c.accent}"></span>`}${esc(c.title)}
+        ${c.id==='all' ? '' : (c.id==='core' ? '' : `<span class="sw" style="background:${c.accent}"></span>`)}${esc(c.title)}
       </button>`).join('');
     filtersEl.querySelectorAll('.fchip').forEach(btn=>{
       btn.addEventListener('click', ()=>{ activeFilter = btn.dataset.filter; render(); });
@@ -299,8 +359,8 @@
     catEl.innerHTML = '';
 
     CATEGORIES.forEach(cat=>{
-      if(activeFilter!=='all' && activeFilter!==cat.id) return;
-      const items = PROBLEMS.filter(p=>p.category===cat.id && matchesQuery(p));
+      if(activeFilter!=='all' && activeFilter!=='core' && activeFilter!==cat.id) return;
+      const items = PROBLEMS.filter(p=>p.category===cat.id && matchesQuery(p) && (activeFilter!=='core' || p.core));
       if(items.length===0) return;
       anyVisible = true;
 
@@ -321,11 +381,12 @@
         const isPending = p.status !== 'done';
         const card = document.createElement(isPending ? 'div' : 'a');
         if(!isPending){ card.href = p.file; }
-        card.className = 'card' + (isPending ? ' pending' : '');
+        card.className = 'card' + (isPending ? ' pending' : '') + (p.core ? ' core' : '');
         card.style.setProperty('--accent', cat.accent);
         card.innerHTML = `
           <div class="card-top">
-            <span class="lc-tag">LC ${p.num}</span>
+            <span class="lc-tag">${p.num!==null ? `LC ${p.num}` : 'General'}</span>
+            ${p.core ? `<span class="core-badge">★ core</span>` : ''}
             ${p.leetcode ? `<a class="ext-link" href="${p.leetcode}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="View on LeetCode">↗ leetcode</a>` : ''}
           </div>
           <div class="card-title">${esc(p.title)}</div>

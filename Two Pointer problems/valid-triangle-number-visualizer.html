@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valid Triangle Number · Two-Pointer Visualizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b111d; --ink-2:#111a2b; --panel:#151f33; --panel-2:#1a2740;
+    --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
+    --mint:#37e0c4; --mint-deep:#0f2f2c; --gold:#f6c453; --gold-deep:#33290b;
+    --coral:#ff6f61; --coral-deep:#3a1512; --blue:#6ea8ff; --violet:#b78bff;
+    --amber:#ffb454; --amber-deep:#3a2a0d;
+    --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:radial-gradient(1200px 600px at 15% -10%, #16233b 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #191330 0%, transparent 50%),var(--ink);
+    color:var(--txt);font-family:var(--display);-webkit-font-smoothing:antialiased;min-height:100%}
+  body{padding:28px 20px 64px;max-width:1160px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--coral);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .eyebrow .tag{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px;letter-spacing:.12em;font-size:11px}
+  h1{font-size:clamp(30px,5vw,50px);font-weight:700;line-height:1.02;letter-spacing:-.02em}
+  h1 .thin{color:var(--muted);font-weight:400}
+  .lede{color:var(--muted);max-width:680px;margin-top:14px;font-size:15.5px;line-height:1.55}
+  .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);padding:1px 6px;border-radius:6px;font-size:.9em}
+  .lede .k{color:var(--amber)} .lede .l{color:var(--blue)} .lede .r{color:var(--violet)}
+  .controls-top{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  .field{flex:1;min-width:280px}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  .input-shell{display:flex;gap:10px}
+  input[type=text]{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
+    font-family:var(--mono);font-size:17px;letter-spacing:.06em;padding:14px 16px;border-radius:12px;outline:none;transition:border-color .2s, box-shadow .2s}
+  input[type=text]:focus{border-color:var(--coral);box-shadow:0 0 0 4px rgba(255,111,97,.14)}
+  .btn{font-family:var(--display);font-weight:600;font-size:15px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);border-radius:12px;padding:0 20px;height:52px;cursor:pointer;
+    transition:transform .12s, background .2s, border-color .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:9px}
+  .btn:hover{background:var(--panel-2)} .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(180deg,#ff9186,#f04f42);color:#2b0704;border:none;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{font-family:var(--mono);font-size:13px;letter-spacing:.03em;color:var(--muted);
+    background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;padding:6px 13px;cursor:pointer;transition:.18s}
+  .chip:hover{color:var(--txt);border-color:var(--coral);background:var(--coral-deep)}
+  .chip b{color:var(--muted-2);font-weight:400;margin-left:7px}
+  .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:26px;align-items:start}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;
+    border-bottom:1px solid var(--line);background:rgba(255,255,255,.012)}
+  .card-head h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .phase-pill{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .phase-pill.scan{color:var(--coral);border-color:#4a2017;background:var(--coral-deep)}
+  .phase-pill.count{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.done{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .stage{padding:26px 18px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+  .tape{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+  .col{display:flex;flex-direction:column;align-items:center;gap:7px;width:50px}
+  @media (max-width:560px){.col{width:38px}}
+  .caret{height:20px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.02em;
+    display:flex;gap:3px;align-items:center;justify-content:center;transition:opacity .2s}
+  .caret .p{padding:1px 5px;border-radius:5px;line-height:1.3}
+  .caret .pK{color:#2b1a00;background:var(--amber)} .caret .pL{color:#04121f;background:var(--blue)} .caret .pR{color:#100420;background:var(--violet)}
+  .cell{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:18px;font-weight:600;border-radius:12px;background:var(--ink-2);border:1.5px solid var(--line);
+    color:var(--txt);transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .25s,border-color .25s,color .25s,box-shadow .25s;position:relative}
+  @media (max-width:560px){.cell{font-size:14px}}
+  .idx{font-family:var(--mono);font-size:10.5px;color:var(--muted-2);transition:color .2s}
+  .cell.fixedK{background:var(--amber-deep);border-color:var(--amber);color:var(--amber);transform:translateY(-6px) scale(1.05)}
+  .cell.left{background:#0f1f3a;border-color:var(--blue);color:var(--blue);transform:translateY(-4px) scale(1.04)}
+  .cell.right{background:#1c1430;border-color:var(--violet);color:var(--violet);transform:translateY(-4px) scale(1.04)}
+  .cell.counted{background:var(--mint-deep);border-color:var(--mint);color:var(--mint)}
+  .cell.outzone{opacity:.3}
+  .idx.on{color:var(--coral)}
+  .count-line{font-family:var(--mono);font-size:15px;color:var(--muted)}
+  .count-line b{color:var(--mint);font-size:18px}
+  .message{font-family:var(--mono);font-size:14px;line-height:1.6;color:var(--txt);text-align:center;max-width:700px;min-height:44px;padding:0 6px}
+  .message .k{color:var(--amber)} .message .l{color:var(--blue)} .message .r{color:var(--violet)} .message .m{color:var(--mint)}
+  .result-banner{display:none;align-items:center;gap:12px;justify-content:center;font-family:var(--display);
+    font-weight:700;font-size:19px;padding:12px 22px;border-radius:14px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+  .result-banner.ok{display:flex;color:var(--mint);background:var(--mint-deep);border:1px solid #1c5b52}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .transport{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap;background:rgba(255,255,255,.012)}
+  .icon-btn{width:44px;height:44px;padding:0;justify-content:center;font-size:16px}
+  .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:6px;background:var(--ink-2);border-radius:999px;overflow:hidden;border:1px solid var(--line-soft)}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--mint));transition:width .2s}
+  .step-count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .speed{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+  .speed input{accent-color:var(--coral);width:96px}
+  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:12.6px;line-height:1.75;overflow-x:auto}
+  .code .ln{display:flex;padding:1px 18px 1px 0;white-space:pre;position:relative;transition:background .18s}
+  .code .ln .no{width:34px;text-align:right;padding-right:16px;color:#3f5170;user-select:none;flex-shrink:0}
+  .code .kw{color:#ff9db1} .code .ty{color:#7fd0ff} .code .fn{color:#f6c453} .code .tx{color:#c6d4ee}
+  .code .ln.exec{background:linear-gradient(90deg,rgba(255,111,97,.16),transparent 82%)}
+  .code .ln.exec .no{color:var(--coral)}
+  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:20px;background:var(--coral);border-radius:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:4px;border:1.5px solid}
+  .dot.k{background:var(--amber-deep);border-color:var(--amber)} .dot.l{background:#0f1f3a;border-color:var(--blue)}
+  .dot.r{background:#1c1430;border-color:var(--violet)} .dot.m{background:var(--mint-deep);border-color:var(--mint)}
+  .foot{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">Opposite-Ends Two Pointers <span class="tag">LeetCode 611</span></div>
+  <h1>Valid Triangle Number <span class="thin">/ visualized</span></h1>
+  <p class="lede">
+    Count triplets that can form a triangle's sides. Sort first, then fix the <b>largest</b> side
+    <span class="k">k</span> from the end inward. For a fixed largest side, if
+    <code>nums[left] + nums[right] &gt; nums[k]</code>, then <em>every</em> value between them also
+    works with <span class="r">right</span> — count all of them at once and move <span class="r">right</span> in.
+  </p>
+
+  <div class="controls-top">
+    <div class="field">
+      <label for="arrInput">Array (comma-separated, positive side lengths)</label>
+      <div class="input-shell">
+        <input id="arrInput" type="text" value="2, 2, 3, 4" spellcheck="false" autocomplete="off">
+        <button class="btn primary" id="runBtn">▶ Run</button>
+      </div>
+    </div>
+  </div>
+  <div class="examples" id="examples"></div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><h2>Execution</h2><span class="phase-pill" id="phasePill">idle</span></div>
+      <div class="stage">
+        <div class="tape" id="tape"></div>
+        <div class="count-line" id="countLine"></div>
+        <div class="message" id="message">Press <span class="k">Run</span> to begin.</div>
+        <div class="result-banner" id="banner"></div>
+      </div>
+      <div class="transport">
+        <button class="btn icon-btn" id="prevBtn" title="Previous">⏴</button>
+        <button class="btn icon-btn" id="playBtn" title="Play / Pause">▶</button>
+        <button class="btn icon-btn" id="nextBtn" title="Next">⏵</button>
+        <button class="btn icon-btn" id="restartBtn" title="Restart">⟲</button>
+        <div class="progress-wrap">
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <span class="step-count" id="stepCount">0 / 0</span>
+        </div>
+        <div class="speed">Speed<input type="range" id="speed" min="1" max="10" value="6"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Java · running line</h2></div>
+      <div class="code" id="code"></div>
+      <div class="legend">
+        <span><i class="dot k"></i>fixed largest side (k)</span>
+        <span><i class="dot l"></i>left</span>
+        <span><i class="dot r"></i>right</span>
+        <span><i class="dot m"></i>counted range</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">O(n²) time · O(log n) sort space &nbsp;·&nbsp; the triangle inequality only needs checking on the two shortest sides — the third is automatic once sorted.</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const CODE = [
+    [['kw','public '],['ty','int '],['fn','triangleNumber'],['tx','('],['kw','int'],['tx','[] nums) {']],
+    [['tx','    Arrays.sort(nums);']],
+    [['tx','    '],['kw','int '],['tx','n = nums.length, count = 0;']],
+    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','k = n - 1; k >= 2; k--) {']],
+    [['tx','        '],['kw','int '],['tx','left = 0, right = k - 1;']],
+    [['tx','        '],['kw','while '],['tx','(left < right) {']],
+    [['tx','            '],['kw','if '],['tx','(nums[left] + nums[right] > nums[k]) {']],
+    [['tx','                count += right - left;']],
+    [['tx','                right--;']],
+    [['tx','            } '],['kw','else '],['tx','{']],
+    [['tx','                left++;']],
+    [['tx','            }']],
+    [['tx','        }']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['tx','count;']],
+    [['tx','}']]
+  ];
+
+  function buildFrames(rawNums){
+    const nums = [...rawNums].sort((a,b)=>a-b);
+    const n = nums.length, frames = [];
+    let count = 0;
+
+    frames.push({arr:nums.slice(), k:-1,left:-1,right:-1, phase:'scan', code:1, count:0,
+      msg:`<span class="k">Arrays.sort(nums)</span> — puts the largest of any three at a fixed, known position.`});
+
+    if(n<3){
+      frames.push({arr:nums.slice(), k:-1,left:-1,right:-1, phase:'done', code:14, count:0,
+        msg:`Fewer than 3 sides — no triangle possible.`});
+      return frames;
+    }
+
+    for(let k=n-1;k>=2;k--){
+      let left=0, right=k-1;
+      frames.push({arr:nums.slice(), k,left,right, phase:'scan', code:4, count,
+        msg:`Fix <span class="k">k=${k}</span> (largest side, val ${nums[k]}). Scan <span class="l">left=0</span>..<span class="r">right=${right}</span> for valid pairs.`});
+
+      while(left<right){
+        const sum = nums[left]+nums[right];
+        frames.push({arr:nums.slice(), k,left,right, phase:'scan', code:6, count, sum,
+          msg:`${nums[left]} + ${nums[right]} = <b>${sum}</b> vs largest side <b>${nums[k]}</b>`});
+        if(sum>nums[k]){
+          const gained = right-left;
+          count += gained;
+          frames.push({arr:nums.slice(), k,left,right, phase:'count', code:7, count, gained,
+            msg:`<span class="m">${sum} &gt; ${nums[k]}</span> — every value from index ${left} to ${right-1} paired with ${right} also satisfies it. <b>+${gained}</b> triangles.`});
+          right--;
+          frames.push({arr:nums.slice(), k,left,right, phase:'scan', code:8, count,
+            msg:`<span class="r">right--</span> — look for the next valid pairing with a smaller right side.`});
+        } else {
+          frames.push({arr:nums.slice(), k,left,right, phase:'scan', code:10, count,
+            msg:`${sum} ≤ ${nums[k]} — too small to form a triangle. <span class="l">left++</span> to try a bigger left side.`});
+          left++;
+        }
+      }
+      frames.push({arr:nums.slice(), k,left:-1,right:-1, phase:'scan', code:3, count,
+        msg:`Done with <span class="k">k=${k}</span>. Move to the next smaller largest-side.`});
+    }
+
+    frames.push({arr:nums.slice(), k:-1,left:-1,right:-1, phase:'done', code:14, count,
+      msg:`<span class="m">Total valid triangles = ${count}.</span>`});
+    return frames;
+  }
+
+  const $ = id => document.getElementById(id);
+  const tapeEl=$('tape'), msgEl=$('message'), bannerEl=$('banner'), pillEl=$('phasePill'),
+        barEl=$('bar'), countEl=$('stepCount'), codeEl=$('code'), inputEl=$('arrInput'), countLineEl=$('countLine');
+  let frames=[], idx=0, playing=false, timer=null, curArr=[];
+
+  (function renderCode(){
+    codeEl.innerHTML = CODE.map((line,i)=>{
+      const tx = line.map(([c,t])=>`<span class="${c}">${esc(t)}</span>`).join('');
+      return `<div class="ln" data-line="${i}"><span class="no">${i+1}</span>${tx}</div>`;
+    }).join('');
+  })();
+  function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function parseArr(str){ return str.split(',').map(s=>s.trim()).filter(s=>s!=='').map(Number).filter(x=>!isNaN(x)&&x>=0).slice(0,10); }
+
+  function buildTape(len){
+    tapeEl.innerHTML='';
+    for(let k=0;k<len;k++){
+      const col=document.createElement('div'); col.className='col';
+      col.innerHTML = `<div class="caret" data-caret="${k}"></div>`+
+        `<div class="cell" data-cell="${k}"></div>`+
+        `<div class="idx" data-idx="${k}">${k}</div>`;
+      tapeEl.appendChild(col);
+    }
+  }
+
+  function render(){
+    const f = frames[idx]; if(!f) return;
+    curArr = f.arr;
+    for(let k=0;k<f.arr.length;k++){
+      const cell=tapeEl.querySelector(`[data-cell="${k}"]`);
+      const caret=tapeEl.querySelector(`[data-caret="${k}"]`);
+      const idxLbl=tapeEl.querySelector(`[data-idx="${k}"]`);
+      cell.textContent = f.arr[k];
+      let cls='cell';
+      if(f.k>=0 && k>f.k) cls+=' outzone';
+      if(k===f.k) cls+=' fixedK';
+      if(k===f.left) cls+=' left';
+      if(k===f.right) cls+=' right';
+      if(f.phase==='count' && k>=f.left && k<f.right) cls+=' counted';
+      cell.className=cls;
+      caret.innerHTML='';
+      if(k===f.k) caret.innerHTML='<span class="p pK">k</span>';
+      if(k===f.left) caret.innerHTML='<span class="p pL">L</span>';
+      if(k===f.right) caret.innerHTML='<span class="p pR">R</span>';
+      caret.style.opacity = caret.innerHTML? '1':'0';
+      idxLbl.classList.toggle('on', k===f.k||k===f.left||k===f.right);
+    }
+    msgEl.innerHTML=f.msg;
+    countLineEl.innerHTML = `running count: <b>${f.count}</b>`;
+    const pmap={scan:['scan','● scanning'],count:['count','+ counting'],done:['done','■ complete']};
+    const [pc,ptxt]=pmap[f.phase]||['','idle'];
+    pillEl.className='phase-pill '+pc; pillEl.textContent=ptxt;
+    codeEl.querySelectorAll('.ln').forEach(l=>l.classList.remove('exec'));
+    const line=codeEl.querySelector(`[data-line="${f.code}"]`); if(line) line.classList.add('exec');
+    bannerEl.className='result-banner';
+    if(idx===frames.length-1 && f.phase==='done'){
+      bannerEl.className='result-banner ok'; bannerEl.innerHTML=`✓ Total valid triangles = ${f.count}`;
+    }
+    barEl.style.width=(frames.length<=1?100:(idx/(frames.length-1)*100))+'%';
+    countEl.textContent=`${idx+1} / ${frames.length}`;
+    $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx===frames.length-1;
+  }
+
+  function run(str){
+    stop();
+    curArr = parseArr(str);
+    buildTape(curArr.length);
+    frames = buildFrames(curArr);
+    idx=0; render();
+  }
+  function next(){ if(idx<frames.length-1){idx++;render();} else stop(); }
+  function prev(){ if(idx>0){idx--;render();} }
+  function speedMs(){ return 1000 - $('speed').value*85; }
+  function play(){ if(idx>=frames.length-1) idx=0; playing=true; $('playBtn').textContent='⏸'; tick(); }
+  function tick(){ render(); if(idx>=frames.length-1){stop();return;} timer=setTimeout(()=>{idx++;tick();}, speedMs()); }
+  function stop(){ playing=false; clearTimeout(timer); $('playBtn').textContent='▶'; }
+  function togglePlay(){ playing?stop():play(); }
+
+  const EX=[
+    ['2, 2, 3, 4','classic, 3 triangles'],
+    ['4, 2, 3, 4','one repeated value'],
+    ['1, 1','too few valid sides'],
+    ['1, 2, 3','degenerate, not > '],
+    ['3, 4, 5, 6, 7','longer mix'],
+  ];
+  (function chips(){
+    const box=$('examples');
+    EX.forEach(([w,note])=>{
+      const c=document.createElement('button'); c.className='chip'; c.innerHTML=`[${w.replace(/\s/g,'')}]<b>${note}</b>`;
+      c.onclick=()=>{ inputEl.value=w; run(w); }; box.appendChild(c);
+    });
+  })();
+
+  $('runBtn').onclick=()=>run(inputEl.value);
+  inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter') run(inputEl.value); });
+  $('nextBtn').onclick=()=>{stop();next();};
+  $('prevBtn').onclick=()=>{stop();prev();};
+  $('playBtn').onclick=togglePlay;
+  $('restartBtn').onclick=()=>{stop();idx=0;render();};
+  document.addEventListener('keydown',e=>{
+    if(document.activeElement===inputEl) return;
+    if(e.key==='ArrowRight'){stop();next();}
+    if(e.key==='ArrowLeft'){stop();prev();}
+    if(e.key===' '){e.preventDefault();togglePlay();}
+  });
+
+  run(inputEl.value);
+})();
+</script>
+</body>
+</html>
