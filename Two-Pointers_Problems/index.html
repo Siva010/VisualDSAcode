@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two Pointers Lab · Problem Index</title>
+<title>Two Pointer Lab · Problem Index</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
     --blue:#6ea8ff; --blue-deep:#0f1f3a;
     --violet:#b78bff; --violet-deep:#1c1430;
     --coral:#ff6f61; --coral-deep:#3a1512;
+    --lime:#c4e666; --lime-deep:#2e3410;
     --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   }
@@ -36,6 +37,9 @@
     padding:16px 0;flex-wrap:wrap}
   .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;
     letter-spacing:.14em;text-transform:uppercase;color:var(--txt);white-space:nowrap}
+  .back-link{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:7px 13px;white-space:nowrap;transition:.18s}
+  .back-link:hover{color:var(--txt);border-color:var(--mint);background:var(--mint-deep)}
   .brand .dot-pair{display:inline-flex;align-items:center;gap:4px}
   .brand .dot-pair i{width:6px;height:6px;border-radius:50%;background:var(--mint);display:inline-block}
   .brand .dot-pair i:last-child{background:var(--violet)}
@@ -135,7 +139,8 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand"><span class="dot-pair"><i></i><i></i></span> Two Pointers Lab</div>
+    <a class="back-link" href="../index.html">← All Labs</a>
+    <div class="brand"><span class="dot-pair"><i></i><i></i></span> Two Pointer Lab</div>
     <div class="search-shell">
       <span class="search-icon">⌕</span>
       <input id="searchInput" type="text" placeholder="Search by name, number, or pattern…" autocomplete="off">
@@ -197,8 +202,6 @@
   // ============================================================
 
   const CATEGORIES = [
-    { id:'foundations', num:'00', title:'Foundations', accent:'var(--mint)',
-      desc:'The pattern two pointers replaces — a hash map doing the same job in one pass.' },
     { id:'basic',       num:'01', title:'Basic Two Pointers', accent:'var(--mint)',
       desc:'Two indices, opposite ends, moving inward based on a simple comparison.' },
     { id:'linkedlist',  num:'02', title:'Linked List Two Pointers', accent:'var(--blue)',
@@ -212,11 +215,6 @@
   ];
 
   const PROBLEMS = [
-    { id:'two-sum', num:1, title:'Two Sum', category:'foundations',
-      pattern:'Hash Map', file:'two-sum-visualizer.html',
-      hook:'One pass, check the complement before inserting — O(n) time, O(n) space.',
-      leetcode:'https://leetcode.com/problems/two-sum/', status:'done' },
-
     { id:'two-sum-ii', num:167, title:'Two Sum II — Sorted Array', category:'basic', core:true,
       pattern:'Two Pointers', file:'two-sum-ii-visualizer.html',
       hook:'Sorted input turns the hash map into two indices converging from the ends.',

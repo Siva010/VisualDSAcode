@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Visualizer Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b111d; --ink-2:#111a2b; --panel:#151f33; --panel-2:#1a2740;
+    --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
+    --mint:#37e0c4; --mint-deep:#0f2f2c;
+    --gold:#f6c453; --gold-deep:#33290b;
+    --lime:#c4e666; --lime-deep:#2e3410;
+    --sky:#5ec8f0; --sky-deep:#0d2f3a;
+    --coral:#ff6f61; --coral-deep:#3a1512;
+    --blue:#6ea8ff; --violet:#b78bff; --rose:#ff8fb0;
+    --teal:#4fd1c5; --indigo:#8c9eff; --orange:#ff9f4a;
+    --magenta:#e08cff; --olive:#a8d15c; --slate:#9fb4d4;
+    --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:
+      radial-gradient(1200px 600px at 12% -10%, #16233b 0%, transparent 55%),
+      radial-gradient(900px 550px at 100% 0%, #191330 0%, transparent 50%),
+      var(--ink);
+    color:var(--txt);font-family:var(--display);-webkit-font-smoothing:antialiased;min-height:100%}
+  body{padding:0 20px 90px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  .topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+    background:rgba(11,17,29,.82);border-bottom:1px solid var(--line);margin:0 -20px 0;padding:0 20px}
+  .topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;
+    padding:16px 0;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--txt);white-space:nowrap}
+  .brand .mark{width:9px;height:9px;border-radius:2px;background:linear-gradient(135deg,var(--mint),var(--sky));display:inline-block}
+  .stat-pill{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;
+    border:1px solid var(--line);border-radius:999px;padding:7px 13px;margin-left:auto}
+  .stat-pill b{color:var(--txt);font-weight:600}
+
+  .hero{padding:64px 0 44px;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--muted-2);display:flex;align-items:center;gap:10px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--mint)}
+  h1{font-size:clamp(36px,6.5vw,64px);font-weight:700;line-height:1.02;letter-spacing:-.025em;max-width:900px}
+  h1 .thin{color:var(--muted);font-weight:400}
+  .lede{color:var(--muted);max-width:640px;font-size:16px;line-height:1.6}
+  .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);padding:1px 6px;border-radius:6px;font-size:.9em}
+
+  /* pattern motif row: three tiny animated icons representing the three lab families */
+  .motif-row{display:flex;gap:34px;margin-top:8px;flex-wrap:wrap}
+  .motif{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2)}
+  .motif svg{width:52px;height:26px;flex-shrink:0}
+
+  /* converging dots (two pointers) */
+  .conv-l,.conv-r{animation-duration:2.6s;animation-timing-function:cubic-bezier(.65,0,.35,1);animation-iteration-count:infinite}
+  .conv-l{animation-name:convL;fill:var(--mint)} .conv-r{animation-name:convR;fill:var(--coral)}
+  @keyframes convL{0%,10%{transform:translateX(0)}50%,60%{transform:translateX(18px)}100%{transform:translateX(0)}}
+  @keyframes convR{0%,10%{transform:translateX(0)}50%,60%{transform:translateX(-18px)}100%{transform:translateX(0)}}
+
+  /* sliding window bracket */
+  .slide-frame{animation:slideFrame 2.6s cubic-bezier(.65,0,.35,1) infinite}
+  @keyframes slideFrame{0%,10%{transform:translateX(0)}50%,60%{transform:translateX(20px)}100%{transform:translateX(0)}}
+
+  .more-box{width:34px;height:26px;border:1.5px dashed var(--line-soft);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--muted-2);flex-shrink:0}
+
+  @media (prefers-reduced-motion:reduce){
+    .conv-l,.conv-r,.slide-frame{animation:none}
+  }
+
+  .labs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-top:12px}
+  .lab-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px 26px 22px;
+    display:flex;flex-direction:column;gap:14px;transition:transform .2s, border-color .2s, background .2s;
+    position:relative;overflow:hidden}
+  .lab-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+  .lab-card:hover{transform:translateY(-4px);border-color:var(--line-soft);background:var(--panel-2)}
+  .lab-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .lab-tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:3px 10px;opacity:.9}
+  .lab-count{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .lab-count b{color:var(--txt)}
+  .lab-title{font-size:23px;font-weight:700;letter-spacing:-.01em}
+  .lab-desc{color:var(--muted);font-size:14px;line-height:1.55;flex:1}
+  .lab-foot{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+  .lab-patterns{font-family:var(--mono);font-size:11px;color:var(--muted-2)}
+  .lab-cta{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:5px}
+  .lab-card:hover .lab-cta{gap:8px}
+  .lab-cta .arrow{transition:transform .18s}
+  .lab-card:hover .lab-cta .arrow{transform:translateX(2px)}
+
+  .lab-card.placeholder{opacity:.45;border-style:dashed}
+  .lab-card.placeholder:hover{transform:none;background:var(--panel)}
+  .lab-card.placeholder .lab-cta{color:var(--muted-2)}
+
+  .foot{margin-top:70px;padding-top:26px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:12.5px;color:var(--muted-2);line-height:1.8;text-align:center}
+  .foot b{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="mark"></span> DSA Visualizer Labs</div>
+    <div class="stat-pill" id="statPill"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow"><span class="dot"></span> Interactive DSA Visualizer Library</div>
+    <h1>Pick a pattern, <span class="thin">step through the algorithm.</span></h1>
+    <p class="lede">
+      Each lab below is a self-contained collection of visualizers for one algorithmic pattern —
+      every solution traced against real test cases, then animated frame by frame alongside the
+      exact <code>Java</code> line executing. Pick a lab to browse its problems.
+    </p>
+
+    <div class="motif-row">
+      <div class="motif">
+        <svg viewBox="0 0 60 26"><circle class="conv-l" cx="10" cy="13" r="5"></circle><circle class="conv-r" cx="50" cy="13" r="5"></circle></svg>
+        converging pointers
+      </div>
+      <div class="motif">
+        <svg viewBox="0 0 60 26"><rect x="2" y="2" width="56" height="22" rx="4" fill="none" stroke="#33456a" stroke-width="1.5"></rect><rect class="slide-frame" x="4" y="4" width="18" height="18" rx="3" fill="none" stroke="var(--lime)" stroke-width="2.5"></rect></svg>
+        sliding window
+      </div>
+      <div class="motif">
+        <span class="more-box">+12</span>
+        more patterns on the way
+      </div>
+    </div>
+  </div>
+
+  <div class="labs-grid" id="labsGrid"></div>
+
+  <div class="foot">
+    Each lab is a self-contained folder — open <code>&lt;lab-folder&gt;/index.html</code> directly, or use this page to jump between them.<br>
+    <b>New labs get added here as new patterns are covered</b> — this page never needs restructuring, only a new entry.
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ============================================================
+  // DATA — this is the entire root page. Add a new lab here when
+  // a new pattern family (binary search, DP, backtracking, etc.)
+  // gets its own folder + index.html. Nothing else needs to change.
+  // ============================================================
+
+  const LABS = [
+    {
+      id: 'two-pointers',
+      title: 'Two Pointer Lab',
+      folder: 'Two-pointers_Problems/index.html',
+      accent: 'var(--mint)',
+      tag: 'Two Pointers',
+      count: 19,
+      week: 'Week 01 · 5 sub-patterns',
+      desc: 'Opposite-ends convergence, fast/slow linked-list pointers, and their generalized k-way extensions. The founding lab.',
+      status: 'done',
+    },
+    {
+      id: 'sliding-window',
+      title: 'Sliding Window Lab',
+      folder: 'Sliding-Window_Problems/index.html',
+      accent: 'var(--lime)',
+      tag: 'Sliding Window',
+      count: 1,
+      week: 'Week 02 · 1 sub-pattern',
+      desc: 'Same-direction pointers — a window expands and contracts across the array, maintaining a running invariant in O(1) per step.',
+      status: 'done',
+    },
+    {
+      id: 'binary-search',
+      title: 'Binary Search Lab',
+      folder: 'binary-search/index.html',
+      accent: 'var(--sky)',
+      tag: 'Binary Search',
+      count: 0,
+      week: 'Week 03',
+      desc: 'Halve the search space each step — classic search, rotated arrays, and binary-searching the answer itself, not just the array.',
+      status: 'pending',
+    },
+    {
+      id: 'trees-dfs',
+      title: 'Trees — DFS Lab',
+      folder: 'trees-dfs/index.html',
+      accent: 'var(--violet)',
+      tag: 'Trees · DFS',
+      count: 0,
+      week: 'Week 04',
+      desc: 'Depth-first recursion over binary trees — traversal, path sums, BST validation, and serialization.',
+      status: 'pending',
+    },
+    {
+      id: 'trees-bfs-tries',
+      title: 'Trees — BFS + Tries Lab',
+      folder: 'trees-bfs-tries/index.html',
+      accent: 'var(--blue)',
+      tag: 'Trees · BFS / Tries',
+      count: 0,
+      week: 'Week 05',
+      desc: 'Level-order traversal for trees, plus tries for prefix-based word search problems.',
+      status: 'pending',
+    },
+    {
+      id: 'graphs-traversal',
+      title: 'Graphs — BFS/DFS/Union-Find Lab',
+      folder: 'graphs-traversal/index.html',
+      accent: 'var(--coral)',
+      tag: 'Graphs · Traversal',
+      count: 0,
+      week: 'Week 06',
+      desc: 'Grid and graph traversal for shortest paths, cycle detection, and connected components.',
+      status: 'pending',
+    },
+    {
+      id: 'graphs-dijkstra',
+      title: 'Graphs — Dijkstra + Advanced Lab',
+      folder: 'graphs-dijkstra/index.html',
+      accent: 'var(--rose)',
+      tag: 'Graphs · Dijkstra',
+      count: 0,
+      week: 'Week 07',
+      desc: 'Weighted shortest paths, modified Dijkstra states, and minimum spanning trees.',
+      status: 'pending',
+    },
+    {
+      id: 'dp-1d',
+      title: 'DP — 1D Lab',
+      folder: 'dp-1d/index.html',
+      accent: 'var(--gold)',
+      tag: 'DP · 1D',
+      count: 0,
+      week: 'Week 08',
+      desc: 'Single-dimension recurrences — climbing stairs, coin change, and longest increasing subsequence.',
+      status: 'pending',
+    },
+    {
+      id: 'dp-2d-string',
+      title: 'DP — 2D + String Lab',
+      folder: 'dp-2d-string/index.html',
+      accent: 'var(--teal)',
+      tag: 'DP · 2D / String',
+      count: 0,
+      week: 'Week 09',
+      desc: 'Two-dimensional recurrences — grid paths, edit distance, and string alignment.',
+      status: 'pending',
+    },
+    {
+      id: 'dp-advanced',
+      title: 'DP — Advanced Lab',
+      folder: 'dp-advanced/index.html',
+      accent: 'var(--indigo)',
+      tag: 'DP · Advanced',
+      count: 0,
+      week: 'Week 10',
+      desc: 'Interval DP, subset partitioning, and game-theory minimax — the hardest DP shapes.',
+      status: 'pending',
+    },
+    {
+      id: 'heap-greedy',
+      title: 'Heap + Greedy Lab',
+      folder: 'heap-greedy/index.html',
+      accent: 'var(--orange)',
+      tag: 'Heap + Greedy',
+      count: 0,
+      week: 'Week 11',
+      desc: 'Priority queues for top-K and streaming problems, plus greedy interval scheduling.',
+      status: 'pending',
+    },
+    {
+      id: 'backtracking',
+      title: 'Backtracking Lab',
+      folder: 'backtracking/index.html',
+      accent: 'var(--magenta)',
+      tag: 'Backtracking',
+      count: 0,
+      week: 'Week 12',
+      desc: 'Exhaustive search with pruning — subsets, permutations, and constraint problems like N-Queens.',
+      status: 'pending',
+    },
+    {
+      id: 'stack-monotonic',
+      title: 'Stack + Monotonic Stack Lab',
+      folder: 'stack-monotonic/index.html',
+      accent: 'var(--olive)',
+      tag: 'Stack',
+      count: 0,
+      week: 'Week 13',
+      desc: 'LIFO structures for matching problems, plus monotonic stacks for next-greater and histogram problems.',
+      status: 'pending',
+    },
+    {
+      id: 'bit-math',
+      title: 'Bit Manipulation + Math Lab',
+      folder: 'bit-math/index.html',
+      accent: 'var(--slate)',
+      tag: 'Bit + Math',
+      count: 0,
+      week: 'Week 14',
+      desc: 'XOR tricks, bit counting, and classic fast-exponentiation math problems.',
+      status: 'pending',
+    },
+
+    // ---- append new labs above this line ----
+  ];
+
+  const $ = id => document.getElementById(id);
+  const gridEl = $('labsGrid'), statPillEl = $('statPill');
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function render(){
+    const totalProblems = LABS.reduce((sum,l)=>sum + (l.status==='done' ? l.count : 0), 0);
+    const doneLabs = LABS.filter(l=>l.status==='done').length;
+    statPillEl.innerHTML = `<b>${doneLabs}</b> of <b>${LABS.length}</b> patterns live &nbsp;·&nbsp; <b>${totalProblems}</b> problems`;
+
+    gridEl.innerHTML = LABS.map(lab=>{
+      const isPlaceholder = lab.status !== 'done';
+      const Tag = isPlaceholder ? 'div' : 'a';
+      const hrefAttr = isPlaceholder ? '' : `href="${lab.folder}"`;
+      return `
+        <${Tag} ${hrefAttr} class="lab-card${isPlaceholder?' placeholder':''}" style="--accent:${lab.accent}">
+          <div class="lab-top">
+            <span class="lab-tag">${esc(lab.tag)}</span>
+            <span class="lab-count"><b>${lab.count}</b> problem${lab.count===1?'':'s'}</span>
+          </div>
+          <div class="lab-title">${esc(lab.title)}</div>
+          <div class="lab-desc">${esc(lab.desc)}</div>
+          <div class="lab-foot">
+            <span class="lab-patterns">${esc(lab.week)}</span>
+            <span class="lab-cta">${isPlaceholder ? 'coming soon' : `enter lab<span class="arrow">→</span>`}</span>
+          </div>
+        </${Tag}>
+      `;
+    }).join('');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
