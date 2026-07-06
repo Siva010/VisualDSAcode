@@ -186,38 +186,42 @@
 
   const CODE = [
     [['kw','public '],['ty','long '],['fn','maximumSubarraySum'],['tx','('],['kw','int'],['tx','[] nums, '],['kw','int '],['tx','k) {']],
-    [['tx','    '],['kw','long '],['tx','sum = 0, max = 0;']],
-    [['tx','    '],['ty','Map<Integer, Integer> '],['tx','count = '],['kw','new '],['tx','HashMap<>();']],
-    [['tx','    '],['kw','int '],['tx','n = nums.length;']],
-    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','i = 0; i < n; i++) {']],
+    [['tx','    '],['ty','Map<Integer, Integer> '],['tx','map = '],['kw','new '],['tx','HashMap<>();']],
+    [['tx','    '],['kw','long '],['tx','sum = 0;']],
+    [['tx','    '],['kw','long '],['tx','ans = 0;']],
+    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','i = 0; i < nums.length; i++) {']],
     [['tx','        sum += nums[i];']],
-    [['tx','        count.merge(nums[i], 1, Integer::sum);']],
-    [['tx','']],
-    [['tx','        '],['kw','if '],['tx','(i >= k) {']],
-    [['tx','            '],['kw','int '],['tx','out = nums[i - k];']],
-    [['tx','            sum -= out;']],
-    [['tx','            count.merge(out, -1, Integer::sum);']],
-    [['tx','            '],['kw','if '],['tx','(count.get(out) == 0) count.remove(out);']],
+    [['tx','        '],['kw','if '],['tx','(map.containsKey(nums[i])) {']],
+    [['tx','            map.put(nums[i], map.get(nums[i]) + 1);']],
+    [['tx','        } '],['kw','else '],['tx','{']],
+    [['tx','            map.put(nums[i], 1);']],
     [['tx','        }']],
-    [['tx','']],
-    [['tx','        '],['kw','if '],['tx','(i >= k - 1 && count.size() == k) {']],
-    [['tx','            max = Math.max(max, sum);']],
+    [['tx','        '],['kw','if '],['tx','(i >= k) {']],
+    [['tx','            '],['kw','int '],['tx','remove = nums[i - k];']],
+    [['tx','            sum -= remove;']],
+    [['tx','            map.put(remove, map.get(remove) - 1);']],
+    [['tx','            '],['kw','if '],['tx','(map.get(remove) == 0) {']],
+    [['tx','                map.remove(remove);']],
+    [['tx','            }']],
+    [['tx','        }']],
+    [['tx','        '],['kw','if '],['tx','(i >= k - 1 && map.size() == k) {']],
+    [['tx','            ans = Math.max(ans, sum);']],
     [['tx','        }']],
     [['tx','    }']],
-    [['tx','    '],['kw','return '],['tx','max;']],
+    [['tx','    '],['kw','return '],['tx','ans;']],
     [['tx','}']]
   ];
 
   function buildFrames(nums, k){
     const n = nums.length, frames = [];
     if(k<1 || k>n){
-      frames.push({arr:nums.slice(), left:-1,right:-1, mapArr:[], sum:0, max:0, phase:'done', code:19,
+      frames.push({arr:nums.slice(), left:-1,right:-1, mapArr:[], sum:0, max:0, phase:'done', code:23,
         msg:`Invalid k for this array length.`});
       return frames;
     }
 
     frames.push({arr:nums.slice(), left:-1,right:-1, mapArr:[], sum:0, max:0, phase:'expand', code:1,
-      msg:`Initialize <b>sum=0</b>, <b>max=0</b>, empty frequency map.`});
+      msg:`Initialize empty <b>map</b>, <b>sum=0</b>, <b>ans=0</b>.`});
 
     let sum = 0, max = 0;
     const count = new Map();
@@ -228,36 +232,54 @@
 
     for(let i=0;i<n;i++){
       sum += nums[i];
-      count.set(nums[i], (count.get(nums[i])||0)+1);
       const left0 = Math.max(0, i-k+1);
-      frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'expand', code:6, entering:i,
-        msg:`<span class="g">Add nums[${i}]=${nums[i]}</span>. sum = <b>${sum}</b>. Frequency of ${nums[i]} is now ${count.get(nums[i])}.`});
+      frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'expand', code:5, entering:i,
+        msg:`<span class="g">sum += nums[${i}]</span> (${nums[i]}). sum = <b>${sum}</b>.`});
+
+      const hadBefore = count.has(nums[i]);
+      count.set(nums[i], (count.get(nums[i])||0)+1);
+      if(hadBefore){
+        frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'expand', code:7, entering:i,
+          msg:`<span class="g">map.containsKey(${nums[i]})</span> is true — bump its count to <b>${count.get(nums[i])}</b>.`});
+      } else {
+        frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'expand', code:9, entering:i,
+          msg:`<span class="g">${nums[i]} is new to the window</span> — map.put(${nums[i]}, 1).`});
+      }
 
       if(i>=k){
         const out = nums[i-k];
         sum -= out;
-        count.set(out, count.get(out)-1);
-        if(count.get(out)===0) count.delete(out);
-        frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'shrink', code:11, leaving:i-k,
-          msg:`Window exceeds size k — <span class="x">remove nums[${i-k}]=${out}</span>. sum = <b>${sum}</b>.`});
+        frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'shrink', code:13, leaving:i-k,
+          msg:`Window exceeds size k — <span class="x">sum -= nums[${i-k}]</span> (${out}). sum = <b>${sum}</b>.`});
+
+        const newCount = count.get(out)-1;
+        count.set(out, newCount);
+        frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'shrink', code:14, leaving:i-k,
+          msg:`<span class="x">map.put(${out}, ${newCount})</span> — one fewer ${out} in the window.`});
+
+        if(newCount===0){
+          count.delete(out);
+          frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'shrink', code:16, leaving:i-k,
+            msg:`<span class="x">Count of ${out} hit 0</span> — map.remove(${out}). It's no longer in the window at all.`});
+        }
       }
 
       if(i>=k-1){
         const isDistinct = count.size===k;
         if(isDistinct && sum>max){
           max = sum;
-          frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'newmax', code:16, isDistinct:true, justMax:true,
-            msg:`<span class="m">All ${k} values distinct</span> and sum ${sum} beats the old max — <b>new max = ${max}</b>.`});
+          frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'newmax', code:20, isDistinct:true, justMax:true,
+            msg:`<span class="m">map.size() == k</span> — all ${k} values distinct — and sum ${sum} beats the old max. <b>new max = ${max}</b>.`});
         } else {
-          frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'check', code:15, isDistinct,
+          frames.push({arr:nums.slice(), left:left0, right:i, mapArr:mapSnapshot(), sum, max, phase:'check', code:19, isDistinct,
             msg: isDistinct
-              ? `Distinct window, sum = ${sum} — doesn't beat current max (${max}).`
-              : `<span class="x">Duplicate value in window</span> — this window doesn't count.`});
+              ? `map.size() == k — distinct window, sum = ${sum} — doesn't beat current max (${max}).`
+              : `<span class="x">map.size() != k</span> — a duplicate is still in the window. Doesn't count.`});
         }
       }
     }
 
-    frames.push({arr:nums.slice(), left:-1,right:-1, mapArr:[], sum, max, phase:'done', code:19,
+    frames.push({arr:nums.slice(), left:-1,right:-1, mapArr:[], sum, max, phase:'done', code:23,
       msg: max>0 ? `<span class="m">Done. Maximum sum = ${max}.</span>` : `<span class="x">No window of size k had all-distinct values. Max = 0.</span>`});
     return frames;
   }
