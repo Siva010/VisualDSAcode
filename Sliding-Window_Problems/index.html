@@ -14,6 +14,7 @@
     --mint:#37e0c4; --mint-deep:#0f2f2c;
     --gold:#f6c453; --gold-deep:#33290b;
     --lime:#c4e666; --lime-deep:#2e3410;
+    --coral:#ff6f61; --coral-deep:#3a1512;
     --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   }
@@ -185,6 +186,8 @@
   const CATEGORIES = [
     { id:'fixed', num:'01', title:'Fixed-Size Window', accent:'var(--lime)',
       desc:'The window size never changes — it just slides, one element in, one element out.' },
+    { id:'variable', num:'02', title:'Variable-Size Window', accent:'var(--coral)',
+      desc:'The window grows and shrinks based on a condition — right always advances, left only moves when it has to.' },
   ];
 
   const PROBLEMS = [
@@ -192,6 +195,16 @@
       pattern:'Fixed Sliding Window + Hash Map', file:'max-sum-distinct-subarrays-k-visualizer.html',
       hook:'A running sum and a frequency map — the window only counts when nothing repeats inside it.',
       leetcode:'https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k/', status:'done' },
+
+    { id:'max-average-subarray', num:643, title:'Maximum Average Subarray I', category:'fixed',
+      pattern:'Fixed Sliding Window', file:'max-average-subarray-visualizer.html',
+      hook:'Build the first window once, then slide — track the max sum, divide by k only at the end.',
+      leetcode:'https://leetcode.com/problems/maximum-average-subarray-i/', status:'done' },
+
+    { id:'longest-substring-no-repeat', num:3, title:'Longest Substring Without Repeating Characters', category:'variable',
+      pattern:'Variable Sliding Window + Hash Set', file:'longest-substring-no-repeat-visualizer.html',
+      hook:'right always moves forward. left only moves when the incoming character is already in the set.',
+      leetcode:'https://leetcode.com/problems/longest-substring-without-repeating-characters/', status:'done' },
 
     // ---- append new problems above this line ----
   ];
