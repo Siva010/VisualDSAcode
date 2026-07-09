@@ -15,6 +15,7 @@
     --gold:#f6c453; --gold-deep:#33290b;
     --lime:#c4e666; --lime-deep:#2e3410;
     --coral:#ff6f61; --coral-deep:#3a1512;
+    --violet:#b78bff; --violet-deep:#1c1430;
     --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   }
@@ -188,6 +189,8 @@
       desc:'The window size never changes — it just slides, one element in, one element out.' },
     { id:'variable', num:'02', title:'Variable-Size Window', accent:'var(--coral)',
       desc:'The window grows and shrinks based on a condition — right always advances, left only moves when it has to.' },
+    { id:'frequency', num:'03', title:'Character-Frequency Window', accent:'var(--violet)',
+      desc:'A fixed-size window that matches by comparing character-count tables — anagram and permutation problems.' },
   ];
 
   const PROBLEMS = [
@@ -210,6 +213,16 @@
       pattern:'Variable Sliding Window + Running Count', file:'max-consecutive-ones-iii-visualizer.html',
       hook:'Same shrink-when-forced shape — but a zeroCount replaces the hash set entirely.',
       leetcode:'https://leetcode.com/problems/max-consecutive-ones-iii/', status:'done' },
+
+    { id:'permutation-in-string', num:567, title:'Permutation in String', category:'frequency',
+      pattern:'Fixed Window + Frequency Match', file:'permutation-in-string-visualizer.html',
+      hook:'A permutation is a rearrangement — so match a fixed window against s1\u2019s character counts.',
+      leetcode:'https://leetcode.com/problems/permutation-in-string/', status:'done' },
+
+    { id:'find-all-anagrams', num:438, title:'Find All Anagrams in a String', category:'frequency',
+      pattern:'Fixed Window + Frequency Match', file:'find-all-anagrams-visualizer.html',
+      hook:'Identical machinery to Permutation in String — but collect every start index instead of stopping.',
+      leetcode:'https://leetcode.com/problems/find-all-anagrams-in-a-string/', status:'done' },
 
     // ---- append new problems above this line ----
   ];
