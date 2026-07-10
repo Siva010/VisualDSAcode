@@ -16,7 +16,7 @@
   <a href="https://github.com/Siva010/VisualDSAcode/stargazers"><img src="https://img.shields.io/github/stars/Siva010/VisualDSAcode?style=for-the-badge&color=f6c453" alt="Stars"></a>
   <a href="https://github.com/Siva010/VisualDSAcode/network/members"><img src="https://img.shields.io/github/forks/Siva010/VisualDSAcode?style=for-the-badge&color=6ea8ff" alt="Forks"></a>
   <a href="index.html"><img src="https://img.shields.io/badge/Labs-2-37e0c4?style=for-the-badge" alt="Labs"></a>
-  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-27-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
+  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-26-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
   <a href="https://leetcode.com"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode"></a>
 </p>
 
@@ -30,7 +30,7 @@
 ## 🎬 Interactive Labs
 
 <p align="center">
-  <strong>Two Pointers Lab</strong> — 20 visualizers<br>
+  <strong>Two Pointers Lab</strong> — 19 visualizers<br>
   <strong>Sliding Window Lab</strong> — 7 visualizers · 3 sub-patterns
 </p>
 
@@ -51,11 +51,11 @@ Each lab features:
 
 All visualizers are organized into focused labs (always up to date):
 
-👉 **[Two Pointers Lab (20 visualizers) →](Two-Pointers_Problems/index.html)**  
+👉 **[Two Pointers Lab (19 visualizers) →](Two-Pointers_Problems/index.html)**  
 👉 **[Sliding Window Lab (7 visualizers) →](Sliding-Window_Problems/index.html)**
 
 ### Two Pointers
-Includes Two Sum, 3Sum / 4Sum / kSum, Container With Most Water, Trapping Rain Water, Valid Palindrome, Sort Colors, Fast & Slow linked-list problems, and more.
+Includes Two Sum II, 3Sum / 4Sum / kSum, Container With Most Water, Trapping Rain Water, Valid Palindrome, Sort Colors, Fast & Slow linked-list problems, and more.
 
 ### Sliding Window
 Three sub-patterns:
@@ -121,8 +121,8 @@ Each visualizer shows the pointers/window moving in real time so the patterns **
 VisualDSAcode/
 ├── index.html                              # Main hub — DSA Visualizer Labs
 ├── Two-Pointers_Problems/
-│   ├── index.html                          # Gallery + search (20 visualizers)
-│   ├── two-sum-visualizer.html
+│   ├── index.html                          # Gallery + search (19 visualizers)
+│   ├── two-sum-ii-visualizer.html
 │   ├── 3sum-visualizer.html
 │   ├── trapping-rain-water-visualizer.html
 │   └── ...
@@ -154,7 +154,7 @@ VisualDSAcode/
 
 ## 🌱 Roadmap
 
-- [x] Two Pointers Lab (20 visualizers)
+- [x] Two Pointers Lab (19 visualizers)
 - [x] Sliding Window Lab (7 visualizers · fixed / variable / frequency)
 - [ ] More patterns (Binary Search, Fast & Slow lab, Backtracking, etc.)
 - [ ] Dark/light theme toggle
