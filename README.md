@@ -69,6 +69,14 @@ Four sub-patterns:
 
 > All visualizers are built and verified against real test cases.
 
+### Sliding Window study guides
+Beyond the interactive lab, the repo includes written pattern catalogs (Java templates + priority order):
+
+| Guide | What it is |
+|-------|------------|
+| **[Prioritized catalog](docs/Sliding-Window/sliding-window-prioritized-categorized.md)** | High-ROI study plan (~24 P0 / ~40 P0+P1) — start here |
+| **[Full catalog](docs/Sliding-Window/sliding-window-categorized.md)** | All **169** LeetCode Sliding Window problems by method |
+
 ---
 
 ## 🚀 Getting Started
@@ -141,6 +149,10 @@ VisualDSAcode/
 ├── assets/
 │   ├── banner.jpg
 │   └── logo.jpg
+├── docs/
+│   └── Sliding-Window/
+│       ├── sliding-window-prioritized-categorized.md   # study plan
+│       └── sliding-window-categorized.md               # full 169 catalog
 ├── README.md
 └── (more patterns coming soon)
 ```
@@ -159,6 +171,7 @@ VisualDSAcode/
 
 - [x] Two Pointers Lab (19 visualizers)
 - [x] Sliding Window Lab (8 visualizers · fixed / variable / frequency / deque)
+- [x] Sliding Window pattern catalogs (prioritized + full 169)
 - [ ] More patterns (Binary Search, Fast & Slow lab, Backtracking, etc.)
 - [ ] Dark/light theme toggle
 - [ ] Export animation as GIF
