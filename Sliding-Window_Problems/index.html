@@ -16,6 +16,7 @@
     --lime:#c4e666; --lime-deep:#2e3410;
     --coral:#ff6f61; --coral-deep:#3a1512;
     --violet:#b78bff; --violet-deep:#1c1430;
+    --sky:#5ec8f0; --sky-deep:#0d2f3a;
     --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   }
@@ -191,6 +192,8 @@
       desc:'The window grows and shrinks based on a condition — right always advances, left only moves when it has to.' },
     { id:'frequency', num:'03', title:'Character-Frequency Window', accent:'var(--violet)',
       desc:'A fixed-size window that matches by comparing character-count tables — anagram and permutation problems.' },
+    { id:'deque', num:'04', title:'Monotonic Deque', accent:'var(--sky)',
+      desc:'A deque of candidate indices kept in decreasing order — the front is always the window\u2019s answer in O(1).' },
   ];
 
   const PROBLEMS = [
@@ -228,6 +231,11 @@
       pattern:'Fixed Window + Frequency Match', file:'find-all-anagrams-visualizer.html',
       hook:'Identical machinery to Permutation in String — but collect every start index instead of stopping.',
       leetcode:'https://leetcode.com/problems/find-all-anagrams-in-a-string/', status:'done' },
+
+    { id:'sliding-window-maximum', num:239, title:'Sliding Window Maximum', category:'deque',
+      pattern:'Monotonic Deque', file:'sliding-window-maximum-visualizer.html',
+      hook:'A decreasing deque of indices — the front is always the window max, each index enters and leaves once.',
+      leetcode:'https://leetcode.com/problems/sliding-window-maximum/', status:'done' },
 
     // ---- append new problems above this line ----
   ];

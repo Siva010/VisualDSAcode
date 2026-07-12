@@ -16,7 +16,7 @@
   <a href="https://github.com/Siva010/VisualDSAcode/stargazers"><img src="https://img.shields.io/github/stars/Siva010/VisualDSAcode?style=for-the-badge&color=f6c453" alt="Stars"></a>
   <a href="https://github.com/Siva010/VisualDSAcode/network/members"><img src="https://img.shields.io/github/forks/Siva010/VisualDSAcode?style=for-the-badge&color=6ea8ff" alt="Forks"></a>
   <a href="index.html"><img src="https://img.shields.io/badge/Labs-2-37e0c4?style=for-the-badge" alt="Labs"></a>
-  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-26-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
+  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-27-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
   <a href="https://leetcode.com"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode"></a>
 </p>
 
@@ -31,7 +31,7 @@
 
 <p align="center">
   <strong>Two Pointers Lab</strong> — 19 visualizers<br>
-  <strong>Sliding Window Lab</strong> — 7 visualizers · 3 sub-patterns
+  <strong>Sliding Window Lab</strong> — 8 visualizers · 4 sub-patterns
 </p>
 
 **Experience the full interactive galleries:**
@@ -52,19 +52,20 @@ Each lab features:
 All visualizers are organized into focused labs (always up to date):
 
 👉 **[Two Pointers Lab (19 visualizers) →](Two-Pointers_Problems/index.html)**  
-👉 **[Sliding Window Lab (7 visualizers) →](Sliding-Window_Problems/index.html)**
+👉 **[Sliding Window Lab (8 visualizers) →](Sliding-Window_Problems/index.html)**
 
 ### Two Pointers
 Includes Two Sum II, 3Sum / 4Sum / kSum, Container With Most Water, Trapping Rain Water, Valid Palindrome, Sort Colors, Fast & Slow linked-list problems, and more.
 
 ### Sliding Window
-Three sub-patterns:
+Four sub-patterns:
 
 | Sub-pattern | Problems |
 |-------------|----------|
 | **Fixed-size window** | Maximum Average Subarray I, Max Sum of Distinct Subarrays with Length K |
 | **Variable-size window** | Longest Substring Without Repeating Characters, Max Consecutive Ones III, Minimum Window Substring |
 | **Character-frequency window** | Permutation in String, Find All Anagrams in a String |
+| **Monotonic deque** | Sliding Window Maximum |
 
 > All visualizers are built and verified against real test cases.
 
@@ -110,6 +111,7 @@ Maintains a dynamic window that expands and contracts while tracking invariants 
 - **Fixed windows** slide one element at a time
 - **Variable windows** grow/shrink based on a validity condition
 - **Frequency windows** match character-count tables (anagrams & permutations)
+- **Monotonic deques** keep candidates ordered so the window answer is always O(1) at the front
 
 Each visualizer shows the pointers/window moving in real time so the patterns **click**.
 
@@ -127,13 +129,14 @@ VisualDSAcode/
 │   ├── trapping-rain-water-visualizer.html
 │   └── ...
 ├── Sliding-Window_Problems/
-│   ├── index.html                          # Gallery + search (7 visualizers)
+│   ├── index.html                          # Gallery + search (8 visualizers)
 │   ├── max-average-subarray-visualizer.html
 │   ├── longest-substring-no-repeat-visualizer.html
 │   ├── max-consecutive-ones-iii-visualizer.html
 │   ├── minimum-window-substring-visualizer.html
 │   ├── permutation-in-string-visualizer.html
 │   ├── find-all-anagrams-visualizer.html
+│   ├── sliding-window-maximum-visualizer.html
 │   └── ...
 ├── assets/
 │   ├── banner.jpg
@@ -155,7 +158,7 @@ VisualDSAcode/
 ## 🌱 Roadmap
 
 - [x] Two Pointers Lab (19 visualizers)
-- [x] Sliding Window Lab (7 visualizers · fixed / variable / frequency)
+- [x] Sliding Window Lab (8 visualizers · fixed / variable / frequency / deque)
 - [ ] More patterns (Binary Search, Fast & Slow lab, Backtracking, etc.)
 - [ ] Dark/light theme toggle
 - [ ] Export animation as GIF
