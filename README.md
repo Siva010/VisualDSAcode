@@ -15,8 +15,8 @@
 <p align="center">
   <a href="https://github.com/Siva010/VisualDSAcode/stargazers"><img src="https://img.shields.io/github/stars/Siva010/VisualDSAcode?style=for-the-badge&color=f6c453" alt="Stars"></a>
   <a href="https://github.com/Siva010/VisualDSAcode/network/members"><img src="https://img.shields.io/github/forks/Siva010/VisualDSAcode?style=for-the-badge&color=6ea8ff" alt="Forks"></a>
-  <a href="index.html"><img src="https://img.shields.io/badge/Labs-2-37e0c4?style=for-the-badge" alt="Labs"></a>
-  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-27-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
+  <a href="index.html"><img src="https://img.shields.io/badge/Labs-3-37e0c4?style=for-the-badge" alt="Labs"></a>
+  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-29-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
   <a href="https://leetcode.com"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode"></a>
 </p>
 
@@ -31,16 +31,18 @@
 
 <p align="center">
   <strong>Two Pointers Lab</strong> — 19 visualizers<br>
-  <strong>Sliding Window Lab</strong> — 8 visualizers · 4 sub-patterns
+  <strong>Sliding Window Lab</strong> — 8 visualizers · 4 sub-patterns<br>
+  <strong>Binary Search Lab</strong> — 2 visualizers · rotated arrays
 </p>
 
 **Experience the full interactive galleries:**
 
 👉 **[Two Pointers Lab →](Two-Pointers_Problems/index.html)**  
-👉 **[Sliding Window Lab →](Sliding-Window_Problems/index.html)**
+👉 **[Sliding Window Lab →](Sliding-Window_Problems/index.html)**  
+👉 **[Binary Search Lab →](Binary-Search_Problems/index.html)**
 
 Each lab features:
-- Real-time pointer / window movement animations
+- Real-time pointer / window / mid-index animations
 - Search + filter by category
 - Direct LeetCode links
 - Clean, modern dark theme
@@ -52,7 +54,8 @@ Each lab features:
 All visualizers are organized into focused labs (always up to date):
 
 👉 **[Two Pointers Lab (19 visualizers) →](Two-Pointers_Problems/index.html)**  
-👉 **[Sliding Window Lab (8 visualizers) →](Sliding-Window_Problems/index.html)**
+👉 **[Sliding Window Lab (8 visualizers) →](Sliding-Window_Problems/index.html)**  
+👉 **[Binary Search Lab (2 visualizers) →](Binary-Search_Problems/index.html)**
 
 ### Two Pointers
 Includes Two Sum II, 3Sum / 4Sum / kSum, Container With Most Water, Trapping Rain Water, Valid Palindrome, Sort Colors, Fast & Slow linked-list problems, and more.
@@ -66,6 +69,11 @@ Four sub-patterns:
 | **Variable-size window** | Longest Substring Without Repeating Characters, Max Consecutive Ones III, Minimum Window Substring |
 | **Character-frequency window** | Permutation in String, Find All Anagrams in a String |
 | **Monotonic deque** | Sliding Window Maximum |
+
+### Binary Search
+| Sub-pattern | Problems |
+|-------------|----------|
+| **Rotated arrays** | Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array |
 
 > All visualizers are built and verified against real test cases.
 
@@ -98,6 +106,7 @@ No installation or build step required.
    Or jump straight into a lab:
    - `Two-Pointers_Problems/index.html`
    - `Sliding-Window_Problems/index.html`
+   - `Binary-Search_Problems/index.html`
 
 ### Option 2 — Direct on GitHub
 Navigate to any `.html` file or the root `index.html` in the browser. GitHub will render the pages (best experience when cloned locally).
@@ -121,7 +130,13 @@ Maintains a dynamic window that expands and contracts while tracking invariants 
 - **Frequency windows** match character-count tables (anagrams & permutations)
 - **Monotonic deques** keep candidates ordered so the window answer is always O(1) at the front
 
-Each visualizer shows the pointers/window moving in real time so the patterns **click**.
+### Binary Search
+Halve the search space each step — not only on sorted arrays, but on rotated arrays and answer spaces:
+- Prove which half is still sorted after a rotation
+- Compare `mid` against the right endpoint to find the pivot / minimum
+- Search an answer range when the array itself is not the search domain
+
+Each visualizer shows the pointers/window/mid index moving in real time so the patterns **click**.
 
 ---
 
@@ -146,6 +161,10 @@ VisualDSAcode/
 │   ├── find-all-anagrams-visualizer.html
 │   ├── sliding-window-maximum-visualizer.html
 │   └── ...
+├── Binary-Search_Problems/
+│   ├── index.html                          # Gallery + search (2 visualizers)
+│   ├── search-in-rotated-sorted-array-visualizer.html
+│   └── find-min-rotated-sorted-array-visualizer.html
 ├── assets/
 │   ├── banner.jpg
 │   └── logo.jpg
@@ -172,7 +191,9 @@ VisualDSAcode/
 - [x] Two Pointers Lab (19 visualizers)
 - [x] Sliding Window Lab (8 visualizers · fixed / variable / frequency / deque)
 - [x] Sliding Window pattern catalogs (prioritized + full 169)
-- [ ] More patterns (Binary Search, Fast & Slow lab, Backtracking, etc.)
+- [x] Binary Search Lab (2 visualizers · rotated arrays)
+- [ ] More Binary Search (classic, answer-space, hard)
+- [ ] More patterns (Trees, Graphs, DP, Backtracking, etc.)
 - [ ] Dark/light theme toggle
 - [ ] Export animation as GIF
 - [ ] Add Java/Python code panels alongside visuals
