@@ -16,7 +16,7 @@
   <a href="https://github.com/Siva010/VisualDSAcode/stargazers"><img src="https://img.shields.io/github/stars/Siva010/VisualDSAcode?style=for-the-badge&color=f6c453" alt="Stars"></a>
   <a href="https://github.com/Siva010/VisualDSAcode/network/members"><img src="https://img.shields.io/github/forks/Siva010/VisualDSAcode?style=for-the-badge&color=6ea8ff" alt="Forks"></a>
   <a href="index.html"><img src="https://img.shields.io/badge/Labs-3-37e0c4?style=for-the-badge" alt="Labs"></a>
-  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-29-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
+  <a href="index.html"><img src="https://img.shields.io/badge/Visualizers-32-6ea8ff?style=for-the-badge" alt="Visualizers"></a>
   <a href="https://leetcode.com"><img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" alt="LeetCode"></a>
 </p>
 
@@ -32,7 +32,7 @@
 <p align="center">
   <strong>Two Pointers Lab</strong> — 19 visualizers<br>
   <strong>Sliding Window Lab</strong> — 8 visualizers · 4 sub-patterns<br>
-  <strong>Binary Search Lab</strong> — 2 visualizers · rotated arrays
+  <strong>Binary Search Lab</strong> — 5 visualizers · 4 sub-patterns
 </p>
 
 **Experience the full interactive galleries:**
@@ -55,7 +55,7 @@ All visualizers are organized into focused labs (always up to date):
 
 👉 **[Two Pointers Lab (19 visualizers) →](Two-Pointers_Problems/index.html)**  
 👉 **[Sliding Window Lab (8 visualizers) →](Sliding-Window_Problems/index.html)**  
-👉 **[Binary Search Lab (2 visualizers) →](Binary-Search_Problems/index.html)**
+👉 **[Binary Search Lab (5 visualizers) →](Binary-Search_Problems/index.html)**
 
 ### Two Pointers
 Includes Two Sum II, 3Sum / 4Sum / kSum, Container With Most Water, Trapping Rain Water, Valid Palindrome, Sort Colors, Fast & Slow linked-list problems, and more.
@@ -73,7 +73,10 @@ Four sub-patterns:
 ### Binary Search
 | Sub-pattern | Problems |
 |-------------|----------|
+| **Classic** | Binary Search, Search Insert Position, First Bad Version |
 | **Rotated arrays** | Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array |
+| **Answer space** | *(coming soon)* Koko Eating Bananas, Capacity to Ship Packages |
+| **Hard** | *(coming soon)* Find Peak Element, Median of Two Sorted Arrays |
 
 > All visualizers are built and verified against real test cases.
 
@@ -162,7 +165,10 @@ VisualDSAcode/
 │   ├── sliding-window-maximum-visualizer.html
 │   └── ...
 ├── Binary-Search_Problems/
-│   ├── index.html                          # Gallery + search (2 visualizers)
+│   ├── index.html                          # Gallery + search (5 visualizers)
+│   ├── binary-search-visualizer.html
+│   ├── search-insert-position-visualizer.html
+│   ├── first-bad-version-visualizer.html
 │   ├── search-in-rotated-sorted-array-visualizer.html
 │   └── find-min-rotated-sorted-array-visualizer.html
 ├── assets/
@@ -191,8 +197,8 @@ VisualDSAcode/
 - [x] Two Pointers Lab (19 visualizers)
 - [x] Sliding Window Lab (8 visualizers · fixed / variable / frequency / deque)
 - [x] Sliding Window pattern catalogs (prioritized + full 169)
-- [x] Binary Search Lab (2 visualizers · rotated arrays)
-- [ ] More Binary Search (classic, answer-space, hard)
+- [x] Binary Search Lab (5 visualizers · classic + rotated)
+- [ ] More Binary Search (answer-space, hard)
 - [ ] More patterns (Trees, Graphs, DP, Backtracking, etc.)
 - [ ] Dark/light theme toggle
 - [ ] Export animation as GIF

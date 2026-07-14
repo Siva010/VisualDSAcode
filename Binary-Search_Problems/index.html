@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Binary Search Lab · Problem Index</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwYjExMWQiLz4KICA8cmVjdCB4PSI4IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzM3ZTBjNCIvPgogIDxyZWN0IHg9IjI1IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzFhMjc0MCIgc3Ryb2tlPSIjMmEzYjU4IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8cmVjdCB4PSI0MiIgeT0iMjUiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiNmZjZmNjEiLz4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,10 +14,9 @@
     --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
     --mint:#37e0c4; --mint-deep:#0f2f2c;
     --gold:#f6c453; --gold-deep:#33290b;
-    --lime:#c4e666; --lime-deep:#2e3410;
+    --sky:#5ec8f0; --sky-deep:#0d2f3a;
     --coral:#ff6f61; --coral-deep:#3a1512;
     --violet:#b78bff; --violet-deep:#1c1430;
-    --sky:#5ec8f0; --sky-deep:#0d2f3a;
     --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
   }
@@ -186,11 +186,32 @@
   // ============================================================
 
   const CATEGORIES = [
-    { id:'rotated', num:'01', title:'Rotated Arrays', accent:'var(--sky)',
+    { id:'classic', num:'01', title:'Classic Binary Search', accent:'var(--mint)',
+      desc:'The vanilla template — get this reflexive before any variant. lo/hi converge, mid splits the space in half.' },
+    { id:'rotated', num:'02', title:'Rotated Arrays', accent:'var(--sky)',
       desc:'The array isn\u2019t fully sorted anymore, but one half of it always still is.' },
+    { id:'answer', num:'03', title:'Answer Space', accent:'var(--gold)',
+      desc:'Binary search over a range of possible answers instead of over the array itself — feasible(x) just needs to be monotonic.' },
+    { id:'hard', num:'04', title:'Hard', accent:'var(--coral)',
+      desc:'No target, no clean sortedness — just an invariant that still holds and a direction to move in.' },
   ];
 
   const PROBLEMS = [
+    { id:'binary-search-classic', num:704, title:'Binary Search', category:'classic',
+      pattern:'Classic Binary Search', file:'binary-search-visualizer.html',
+      hook:'The template itself — lo/hi converge, mid splits the space. Everything else is a variation on this.',
+      leetcode:'https://leetcode.com/problems/binary-search/', status:'done' },
+
+    { id:'search-insert-position', num:35, title:'Search Insert Position', category:'classic',
+      pattern:'Classic Binary Search', file:'search-insert-position-visualizer.html',
+      hook:'Same template — but even a miss has a useful answer: the index where target would land.',
+      leetcode:'https://leetcode.com/problems/search-insert-position/', status:'done' },
+
+    { id:'first-bad-version', num:278, title:'First Bad Version', category:'classic',
+      pattern:'Classic Binary Search', file:'first-bad-version-visualizer.html',
+      hook:'No array at all — just an API call. The invariant is the only thing you have to search on.',
+      leetcode:'https://leetcode.com/problems/first-bad-version/', status:'done' },
+
     { id:'search-rotated', num:33, title:'Search in Rotated Sorted Array', category:'rotated',
       pattern:'Modified Binary Search', file:'search-in-rotated-sorted-array-visualizer.html',
       hook:'Figure out which half is sorted first, then check if the target falls inside it.',
@@ -200,6 +221,26 @@
       pattern:'Modified Binary Search', file:'find-min-rotated-sorted-array-visualizer.html',
       hook:'Compare mid against right (not left) — the half containing the rotation point never has the min.',
       leetcode:'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/', status:'done' },
+
+    { id:'koko-eating-bananas', num:875, title:'Koko Eating Bananas', category:'answer',
+      pattern:'Binary Search on Answer Space', file:null,
+      hook:'Search eating speeds directly — feasible(speed) is monotonic, so the answer space is searchable.',
+      leetcode:'https://leetcode.com/problems/koko-eating-bananas/', status:'pending' },
+
+    { id:'min-capacity-ship-packages', num:1011, title:'Minimum Capacity to Ship Packages Within D Days', category:'answer',
+      pattern:'Binary Search on Answer Space', file:null,
+      hook:'Same \u201cminimize the maximum\u201d shape as Koko — binary search capacity, check days needed.',
+      leetcode:'https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/', status:'pending' },
+
+    { id:'find-peak-element', num:162, title:'Find Peak Element', category:'hard',
+      pattern:'Binary Search on Slope', file:null,
+      hook:'No target, no full sort — just follow the upward slope. A peak is always guaranteed to exist.',
+      leetcode:'https://leetcode.com/problems/find-peak-element/', status:'pending' },
+
+    { id:'median-two-sorted-arrays', num:4, title:'Median of Two Sorted Arrays', category:'hard',
+      pattern:'Binary Search on Partition', file:null,
+      hook:'Binary search the partition point on the smaller array — O(log min(m,n)), the hardest shape here.',
+      leetcode:'https://leetcode.com/problems/median-of-two-sorted-arrays/', status:'pending' },
 
     // ---- append new problems above this line ----
   ];
