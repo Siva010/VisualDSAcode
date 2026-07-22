@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capacity To Ship Packages Within D Days · Binary Search on Answer Space Visualizer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwYjExMWQiLz4KICA8cmVjdCB4PSI4IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzM3ZTBjNCIvPgogIDxyZWN0IHg9IjI1IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzFhMjc0MCIgc3Ryb2tlPSIjMmEzYjU4IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8cmVjdCB4PSI0MiIgeT0iMjUiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiNmZjZmNjEiLz4KPC9zdmc+Cg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b111d; --ink-2:#111a2b; --panel:#151f33; --panel-2:#1a2740;
+    --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
+    --mint:#37e0c4; --mint-deep:#0f2f2c; --gold:#f6c453; --gold-deep:#33290b;
+    --coral:#ff6f61; --coral-deep:#3a1512; --blue:#6ea8ff; --violet:#b78bff;
+    --sky:#5ec8f0; --sky-deep:#0d2f3a; --lime:#c4e666;
+    --display:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:radial-gradient(1200px 600px at 15% -10%, #16233b 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #191330 0%, transparent 50%),var(--ink);
+    color:var(--txt);font-family:var(--display);-webkit-font-smoothing:antialiased;min-height:100%}
+  body{padding:28px 20px 64px;max-width:1400px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .eyebrow .tag{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px;letter-spacing:.12em;font-size:11px}
+  h1{font-size:clamp(24px,5vw,42px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+  h1 .thin{color:var(--muted);font-weight:400}
+  .lede{color:var(--muted);max-width:730px;margin-top:14px;font-size:15.5px;line-height:1.55}
+  .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);padding:1px 6px;border-radius:6px;font-size:.9em}
+  .controls-top{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  .field{flex:1;min-width:260px}
+  .field.small{flex:0 0 110px;min-width:90px}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  input[type=text],input[type=number]{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
+    font-family:var(--mono);font-size:16px;letter-spacing:.05em;padding:14px 16px;border-radius:12px;outline:none;transition:border-color .2s, box-shadow .2s}
+  input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(246,196,83,.14)}
+  .btn{font-family:var(--display);font-weight:600;font-size:15px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);border-radius:12px;padding:0 20px;height:52px;cursor:pointer;
+    transition:transform .12s, background .2s, border-color .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:9px}
+  .btn:hover{background:var(--panel-2)} .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(180deg,#ffe08a,#f0ab2c);color:#2b1a00;border:none;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{font-family:var(--mono);font-size:13px;letter-spacing:.03em;color:var(--muted);
+    background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;padding:6px 13px;cursor:pointer;transition:.18s}
+  .chip:hover{color:var(--txt);border-color:var(--gold);background:var(--gold-deep)}
+  .chip b{color:var(--muted-2);font-weight:400;margin-left:7px}
+  .grid{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;margin-top:26px;align-items:start}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;
+    border-bottom:1px solid var(--line);background:rgba(255,255,255,.012)}
+  .card-head h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .phase-pill{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .phase-pill.init{color:var(--sky);border-color:#1c4a5b;background:var(--sky-deep)}
+  .phase-pill.trymid{color:var(--gold);border-color:#4a3d17;background:var(--gold-deep)}
+  .phase-pill.load{color:var(--gold);border-color:#4a3d17;background:var(--gold-deep)}
+  .phase-pill.newday{color:var(--coral);border-color:#4a2017;background:var(--coral-deep)}
+  .phase-pill.feasible{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.infeasible{color:var(--coral);border-color:#4a2017;background:var(--coral-deep)}
+  .phase-pill.done{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .stage{padding:26px 20px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+
+  .range-wrap{width:100%;max-width:640px}
+  .range-endlabels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted-2);margin-bottom:6px}
+  .range-track{position:relative;height:16px;background:var(--ink-2);border:1px solid var(--line);border-radius:999px;margin:26px 0 8px}
+  .range-fill{position:absolute;top:-1px;bottom:-1px;background:var(--sky-deep);border:1px solid var(--sky);border-radius:999px;transition:left .3s, right .3s}
+  .range-pin{position:absolute;top:-30px;transform:translateX(-50%);font-family:var(--mono);font-size:11px;font-weight:700;
+    padding:3px 8px;border-radius:7px;white-space:nowrap;transition:left .3s}
+  .range-pin::after{content:"";position:absolute;left:50%;bottom:-16px;width:1.5px;height:14px;background:currentColor;opacity:.6;transform:translateX(-50%)}
+  .range-pin.pin-lo{background:var(--blue);color:#04121f}
+  .range-pin.pin-hi{background:var(--violet);color:#100420}
+  .range-pin.pin-mid{background:var(--gold);color:#2b1a00}
+
+  .packages-wrap{display:flex;flex-direction:column;gap:10px;width:100%;max-width:680px}
+  .packages-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+  .packages-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end}
+  .pkg-card{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--ink-2);border:1.5px solid var(--line-soft);
+    border-radius:10px;padding:8px 11px;min-width:42px;transition:all .2s;position:relative}
+  .pkg-card .pval{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--txt)}
+  .pkg-card .pday{font-family:var(--mono);font-size:9px;color:var(--muted-2)}
+  .pkg-card.current{transform:translateY(-4px) scale(1.08);box-shadow:0 8px 18px -10px var(--gold);border-color:var(--gold)}
+  .pkg-card.dayboundary{margin-left:14px}
+  .pkg-card.dayboundary::before{content:"";position:absolute;left:-10px;top:2px;bottom:2px;width:2px;background:var(--coral);border-radius:2px}
+  .pkg-card.pending{opacity:.35}
+
+  .day-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--muted-2)}
+  .day-legend .dchip{display:flex;align-items:center;gap:5px}
+  .day-legend .dsw{width:9px;height:9px;border-radius:3px}
+
+  .totals-row{display:flex;gap:22px;font-family:var(--mono);font-size:14px;color:var(--muted);flex-wrap:wrap;justify-content:center}
+  .totals-row b{color:var(--txt);font-size:16px}
+  .totals-row .feasible-val{color:var(--mint)}
+  .totals-row .infeasible-val{color:var(--coral)}
+
+  .message{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:var(--txt);text-align:center;max-width:730px;min-height:44px;padding:0 6px}
+  .message .k{color:var(--gold)} .message .x{color:var(--coral)} .message .m{color:var(--mint)} .message .s{color:var(--sky)}
+  .result-banner{display:none;align-items:center;gap:12px;justify-content:center;font-family:var(--display);
+    font-weight:700;font-size:19px;padding:12px 22px;border-radius:14px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+  .result-banner.ok{display:flex;color:var(--mint);background:var(--mint-deep);border:1px solid #1c5b52}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .transport{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap;background:rgba(255,255,255,.012)}
+  .icon-btn{width:44px;height:44px;padding:0;justify-content:center;font-size:16px}
+  .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:6px;background:var(--ink-2);border-radius:999px;overflow:hidden;border:1px solid var(--line-soft)}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--mint));transition:width .2s}
+  .step-count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .speed{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+  .speed input{accent-color:var(--gold);width:96px}
+  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:12.4px;line-height:1.7;overflow-x:auto}
+  .code .ln{display:flex;padding:1px 18px 1px 0;white-space:pre;position:relative;transition:background .18s}
+  .code .ln .no{width:32px;text-align:right;padding-right:14px;color:#3f5170;user-select:none;flex-shrink:0}
+  .code .kw{color:#ff9db1} .code .ty{color:#7fd0ff} .code .fn{color:#f6c453} .code .tx{color:#c6d4ee}
+  .code .ln.exec{background:linear-gradient(90deg,rgba(246,196,83,.16),transparent 82%)}
+  .code .ln.exec .no{color:var(--gold)}
+  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:18px;background:var(--gold);border-radius:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:4px;border:1.5px solid}
+  .dot.l{background:#0f1f3a;border-color:var(--blue)} .dot.h{background:#1c1430;border-color:var(--violet)}
+  .dot.mid{background:var(--gold-deep);border-color:var(--gold)} .dot.m{background:var(--mint-deep);border-color:var(--mint)}
+  .dot.x{background:var(--coral-deep);border-color:var(--coral)}
+  .foot{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">Binary Search — Answer Space <span class="tag">LeetCode 1011</span></div>
+  <h1>Capacity To Ship Packages Within D Days <span class="thin">/ visualized</span></h1>
+  <p class="lede">
+    Same shape as Koko Eating Bananas — binary search the answer, not the array. Here the answer is
+    a ship <b>capacity</b>. The feasibility check is a greedy simulation: load packages onto today's
+    shipment in order; the moment one more would overflow the capacity, start a new day instead.
+    Fewer days needed at a bigger capacity is monotonic, so the search is valid.
+  </p>
+
+  <div class="controls-top">
+    <div class="field">
+      <label for="weightsInput">Package weights, in order (comma-separated)</label>
+      <input id="weightsInput" type="text" value="1, 2, 3, 4, 5, 6, 7, 8, 9, 10" spellcheck="false" autocomplete="off">
+    </div>
+    <div class="field small">
+      <label for="daysInput">D (days)</label>
+      <input id="daysInput" type="number" value="5" min="1">
+    </div>
+    <button class="btn primary" id="runBtn">▶ Run</button>
+  </div>
+  <div class="examples" id="examples"></div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><h2>Execution</h2><span class="phase-pill" id="phasePill">idle</span></div>
+      <div class="stage">
+        <div class="range-wrap">
+          <div class="range-endlabels"><span id="rangeMinLbl"></span><span id="rangeMaxLbl"></span></div>
+          <div class="range-track" id="rangeTrack">
+            <div class="range-fill" id="rangeFill"></div>
+            <div class="range-pin pin-lo" id="pinLo">L</div>
+            <div class="range-pin pin-mid" id="pinMid">M</div>
+            <div class="range-pin pin-hi" id="pinHi">H</div>
+          </div>
+        </div>
+        <div class="packages-wrap">
+          <div class="packages-label">packages, in shipping order (grouped by day at current candidate capacity)</div>
+          <div class="packages-row" id="packagesRow"></div>
+          <div class="day-legend" id="dayLegend"></div>
+        </div>
+        <div class="totals-row" id="totalsRow"></div>
+        <div class="message" id="message">Press <span class="k">Run</span> to begin.</div>
+        <div class="result-banner" id="banner"></div>
+      </div>
+      <div class="transport">
+        <button class="btn icon-btn" id="prevBtn" title="Previous">⏴</button>
+        <button class="btn icon-btn" id="playBtn" title="Play / Pause">▶</button>
+        <button class="btn icon-btn" id="nextBtn" title="Next">⏵</button>
+        <button class="btn icon-btn" id="restartBtn" title="Restart">⟲</button>
+        <div class="progress-wrap">
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <span class="step-count" id="stepCount">0 / 0</span>
+        </div>
+        <div class="speed">Speed<input type="range" id="speedSlider" min="1" max="10" value="6"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Java · running line</h2></div>
+      <div class="code" id="code"></div>
+      <div class="legend">
+        <span><i class="dot l"></i>lo</span>
+        <span><i class="dot mid"></i>mid (candidate capacity)</span>
+        <span><i class="dot h"></i>hi</span>
+        <span><i class="dot x"></i>new day starts</span>
+        <span><i class="dot m"></i>feasible</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">O(n · log(sum − max)) time · O(1) space &nbsp;·&nbsp; lo starts at max(weights) (must fit the biggest package), hi at sum(weights) (ship everything in 1 day).</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const DAY_COLORS = ['var(--mint)','var(--sky)','var(--violet)','var(--lime)','var(--gold)','var(--blue)','var(--coral)'];
+
+  const CODE = [
+    [['kw','public '],['ty','int '],['fn','shipWithinDays'],['tx','('],['kw','int'],['tx','[] weights, '],['kw','int '],['tx','days) {']],
+    [['tx','    '],['kw','int '],['tx','lo = 0, hi = 0;']],
+    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','w : weights) { lo = Math.max(lo, w); hi += w; }']],
+    [['tx','    '],['kw','while '],['tx','(lo < hi) {']],
+    [['tx','        '],['kw','int '],['tx','mid = lo + (hi - lo) / 2;']],
+    [['tx','        '],['kw','if '],['tx','('],['fn','canShip'],['tx','(weights, mid, days)) {']],
+    [['tx','            hi = mid;']],
+    [['tx','        } '],['kw','else '],['tx','{']],
+    [['tx','            lo = mid + 1;']],
+    [['tx','        }']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['tx','lo;']],
+    [['tx','}']],
+    [['tx','']],
+    [['kw','private '],['ty','boolean '],['fn','canShip'],['tx','('],['kw','int'],['tx','[] weights, '],['kw','int '],['tx','capacity, '],['kw','int '],['tx','days) {']],
+    [['tx','    '],['kw','int '],['tx','daysNeeded = 1, currentLoad = 0;']],
+    [['tx','    '],['kw','for '],['tx','('],['kw','int '],['tx','w : weights) {']],
+    [['tx','        '],['kw','if '],['tx','(currentLoad + w > capacity) {']],
+    [['tx','            daysNeeded++;']],
+    [['tx','            currentLoad = 0;']],
+    [['tx','        }']],
+    [['tx','        currentLoad += w;']],
+    [['tx','    }']],
+    [['tx','    '],['kw','return '],['tx','daysNeeded <= days;']],
+    [['tx','}']]
+  ];
+
+  function buildFrames(weights, D){
+    const frames = [];
+    let lo = 0, hi = 0;
+    for(const w of weights){ lo = Math.max(lo, w); hi += w; }
+
+    frames.push({lo, hi, mid:-1, dayOf:[], total:0, phase:'init', code:2,
+      msg:`Initialize <b>lo=${lo}</b> (must fit the biggest package) and <b>hi=${hi}</b> (ship everything in one day).`});
+
+    while(lo<hi){
+      const mid = lo + Math.floor((hi-lo)/2);
+      frames.push({lo, hi, mid, dayOf:[], total:0, phase:'trymid', code:4,
+        msg:`Try <span class="k">capacity = ${mid}</span>. Greedily load packages, day by day.`});
+
+      const dayOf = [];
+      let daysNeeded = 1, currentLoad = 0;
+      for(let i=0;i<weights.length;i++){
+        const w = weights[i];
+        if(currentLoad + w > mid){
+          frames.push({lo, hi, mid, dayOf:dayOf.slice(), total:daysNeeded, curIdx:i, newDay:true, phase:'newday', code:18,
+            msg:`currentLoad(${currentLoad}) + ${w} would exceed capacity ${mid} — <span class="x">start a new day</span>. daysNeeded → ${daysNeeded+1}.`});
+          daysNeeded++;
+          currentLoad = 0;
+        }
+        currentLoad += w;
+        dayOf.push(daysNeeded-1);
+        frames.push({lo, hi, mid, dayOf:dayOf.slice(), total:daysNeeded, curIdx:i, phase:'load', code:21,
+          msg:`Load package ${w} into day ${daysNeeded}. currentLoad = ${currentLoad}.`});
+      }
+
+      const feasible = daysNeeded<=D;
+      frames.push({lo, hi, mid, dayOf:dayOf.slice(), total:daysNeeded, feasible, phase: feasible?'feasible':'infeasible', code:23,
+        msg: feasible
+          ? `<span class="m">${daysNeeded} day${daysNeeded===1?'':'s'} ≤ D (${D})</span> — capacity ${mid} works. Feasible!`
+          : `<span class="x">${daysNeeded} days &gt; D (${D})</span> — not enough days at this capacity.`});
+
+      if(feasible){
+        frames.push({lo, hi:mid, mid, dayOf:dayOf.slice(), total:daysNeeded, phase:'feasible', code:6,
+          msg:`Feasible — try a smaller capacity. <b>hi = ${mid}</b>.`});
+        hi = mid;
+      } else {
+        frames.push({lo:mid+1, hi, mid, dayOf:dayOf.slice(), total:daysNeeded, phase:'infeasible', code:8,
+          msg:`Not feasible — need more room per day. <b>lo = ${mid+1}</b>.`});
+        lo = mid+1;
+      }
+    }
+
+    frames.push({lo, hi, mid:-1, dayOf:[], total:0, phase:'done', code:11, done:true, answer:lo,
+      msg:`<span class="m">lo == hi.</span> Minimum feasible capacity = <b>${lo}</b>.`});
+    return frames;
+  }
+
+  const $ = id => document.getElementById(id);
+  const pinLoEl=$('pinLo'), pinMidEl=$('pinMid'), pinHiEl=$('pinHi'), rangeFillEl=$('rangeFill'),
+        rangeMinLblEl=$('rangeMinLbl'), rangeMaxLblEl=$('rangeMaxLbl'), packagesRowEl=$('packagesRow'),
+        dayLegendEl=$('dayLegend'), totalsRowEl=$('totalsRow'), msgEl=$('message'), bannerEl=$('banner'),
+        pillEl=$('phasePill'), barEl=$('bar'), countEl=$('stepCount'), codeEl=$('code'),
+        weightsEl=$('weightsInput'), daysEl=$('daysInput');
+  let frames=[], idx=0, playing=false, timer=null, curWeights=[], rangeMin=0, rangeMax=1;
+
+  (function renderCode(){
+    codeEl.innerHTML = CODE.map((line,i)=>{
+      const tx = line.map(([c,t])=>`<span class="${c}">${esc(t)}</span>`).join('');
+      return `<div class="ln" data-line="${i}"><span class="no">${i+1}</span>${tx}</div>`;
+    }).join('');
+  })();
+  function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function parseArr(str){ return str.split(',').map(s=>s.trim()).filter(s=>s!=='').map(Number).filter(x=>!isNaN(x)&&x>0).slice(0,14); }
+
+  function pct(v){ return rangeMax===rangeMin ? 0 : ((v-rangeMin)/(rangeMax-rangeMin))*100; }
+
+  function buildPackages(weights){
+    packagesRowEl.innerHTML='';
+    weights.forEach((w)=>{
+      const card=document.createElement('div'); card.className='pkg-card pending';
+      card.innerHTML = `<span class="pval">${w}</span><span class="pday" data-pday></span>`;
+      packagesRowEl.appendChild(card);
+    });
+  }
+
+  function render(){
+    const f = frames[idx]; if(!f) return;
+
+    const loPct = pct(f.lo), hiPct = pct(f.hi);
+    rangeFillEl.style.left = loPct+'%';
+    rangeFillEl.style.right = (100-hiPct)+'%';
+    pinLoEl.style.left = loPct+'%'; pinLoEl.textContent = `L=${f.lo}`;
+    pinHiEl.style.left = hiPct+'%'; pinHiEl.textContent = `H=${f.hi}`;
+    if(f.mid>=0){ pinMidEl.style.display='flex'; pinMidEl.style.left = pct(f.mid)+'%'; pinMidEl.textContent = `M=${f.mid}`; }
+    else pinMidEl.style.display='none';
+
+    const cards = packagesRowEl.querySelectorAll('.pkg-card');
+    cards.forEach((card,i)=>{
+      const pday = card.querySelector('[data-pday]');
+      let cls = 'pkg-card';
+      if(f.dayOf && i<f.dayOf.length){
+        const d = f.dayOf[i];
+        card.style.borderColor = DAY_COLORS[d % DAY_COLORS.length];
+        pday.style.color = DAY_COLORS[d % DAY_COLORS.length];
+        pday.textContent = `day ${d+1}`;
+        if(i>0 && f.dayOf[i-1]!==d) cls += ' dayboundary';
+        if(i===f.curIdx) cls += ' current';
+      } else {
+        card.style.borderColor = '';
+        pday.style.color = '';
+        pday.textContent = '';
+        cls += ' pending';
+      }
+      card.className = cls;
+    });
+
+    dayLegendEl.innerHTML = f.total ? Array.from({length:f.total},(_,d)=>
+      `<span class="dchip"><span class="dsw" style="background:${DAY_COLORS[d%DAY_COLORS.length]}"></span>day ${d+1}</span>`
+    ).join('') : '';
+
+    totalsRowEl.innerHTML = `
+      <span>days needed = <b class="${f.feasible===true?'feasible-val':f.feasible===false?'infeasible-val':''}">${f.total||0}</b></span>
+      <span>D = <b>${daysEl.value}</b></span>
+    `;
+
+    msgEl.innerHTML = f.msg;
+
+    const pmap={init:['init','◆ init'],trymid:['trymid','→ try mid'],load:['load','▤ load'],newday:['newday','⤴ new day'],
+      feasible:['feasible','✓ feasible'],infeasible:['infeasible','✗ infeasible'],done:['done','■ complete']};
+    const [pc,ptxt]=pmap[f.phase]||['','idle'];
+    pillEl.className='phase-pill '+pc; pillEl.textContent=ptxt;
+
+    codeEl.querySelectorAll('.ln').forEach(l=>l.classList.remove('exec'));
+    const line=codeEl.querySelector(`[data-line="${f.code}"]`); if(line) line.classList.add('exec');
+
+    bannerEl.className='result-banner';
+    if(idx===frames.length-1 && f.done){
+      bannerEl.className='result-banner ok'; bannerEl.innerHTML=`✓ Minimum capacity = ${f.answer}`;
+    }
+
+    barEl.style.width=(frames.length<=1?100:(idx/(frames.length-1)*100))+'%';
+    countEl.textContent=`${idx+1} / ${frames.length}`;
+    $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx===frames.length-1;
+  }
+
+  function run(){
+    stop();
+    const weights = parseArr(weightsEl.value);
+    const D = Math.max(1, parseInt(daysEl.value)||1);
+    daysEl.value = D;
+    curWeights = weights;
+    rangeMin = Math.max(...weights);
+    rangeMax = weights.reduce((a,b)=>a+b,0);
+    rangeMinLblEl.textContent = `capacity = ${rangeMin}`;
+    rangeMaxLblEl.textContent = `capacity = ${rangeMax}`;
+    buildPackages(weights);
+    frames = buildFrames(weights, D);
+    idx=0; render();
+  }
+  function next(){ if(idx<frames.length-1){idx++;render();} else stop(); }
+  function prev(){ if(idx>0){idx--;render();} }
+  function speedMs(){ return 1000 - $('speedSlider').value*85; }
+  function play(){ if(idx>=frames.length-1) idx=0; playing=true; $('playBtn').textContent='⏸'; tick(); }
+  function tick(){ render(); if(idx>=frames.length-1){stop();return;} timer=setTimeout(()=>{idx++;tick();}, speedMs()); }
+  function stop(){ playing=false; clearTimeout(timer); $('playBtn').textContent='▶'; }
+  function togglePlay(){ playing?stop():play(); }
+
+  const EX=[
+    {v:'1, 2, 3, 4, 5, 6, 7, 8, 9, 10', d:5, note:'answer 15'},
+    {v:'3, 2, 2, 4, 1, 4', d:3, note:'answer 6'},
+    {v:'1, 2, 3, 1, 1', d:4, note:'answer 3'},
+    {v:'5, 5, 5, 5', d:4, note:'one per day, answer 5'},
+    {v:'5, 5, 5, 5', d:2, note:'two per day, answer 10'},
+  ];
+  (function chips(){
+    const box=$('examples');
+    EX.forEach(ex=>{
+      const c=document.createElement('button'); c.className='chip';
+      c.innerHTML=`[${ex.v.replace(/\s/g,'')}], D=${ex.d}<b>${ex.note}</b>`;
+      c.onclick=()=>{ weightsEl.value=ex.v; daysEl.value=ex.d; run(); };
+      box.appendChild(c);
+    });
+  })();
+
+  $('runBtn').onclick=run;
+  weightsEl.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+  daysEl.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+  $('nextBtn').onclick=()=>{stop();next();};
+  $('prevBtn').onclick=()=>{stop();prev();};
+  $('playBtn').onclick=togglePlay;
+  $('restartBtn').onclick=()=>{stop();idx=0;render();};
+  document.addEventListener('keydown',e=>{
+    if(document.activeElement===weightsEl||document.activeElement===daysEl) return;
+    if(e.key==='ArrowRight'){stop();next();}
+    if(e.key==='ArrowLeft'){stop();prev();}
+    if(e.key===' '){e.preventDefault();togglePlay();}
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>

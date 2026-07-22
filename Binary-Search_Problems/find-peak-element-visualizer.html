@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search Insert Position · Binary Search Visualizer</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwYjExMWQiLz4KICA8cmVjdCB4PSI4IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzM3ZTBjNCIvPgogIDxyZWN0IHg9IjI1IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlbbD0iIzFhMjc0MCIgc3Ryb2tlPSIjMmEzYjU4IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8cmVjdCB4PSI0MiIgeT0iMjUiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiNmZjZmNjEiLz4KPC9zdmc+Cg==">
+<title>Find Peak Element · Binary Search Visualizer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwYjExMWQiLz4KICA8cmVjdCB4PSI4IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzM3ZTBjNCIvPgogIDxyZWN0IHg9IjI1IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE0IiByeD0iMyIgZmlsbD0iIzFhMjc0MCIgc3Ryb2tlPSIjMmEzYjU4IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8cmVjdCB4PSI0MiIgeT0iMjUiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiNmZjZmNjEiLz4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
   :root{
     --ink:#0b111d; --ink-2:#111a2b; --panel:#151f33; --panel-2:#1a2740;
     --line:#26344f; --line-soft:#1f2c44; --txt:#e7eefb; --muted:#8395b4; --muted-2:#5f7196;
@@ -25,30 +24,30 @@
     color:var(--txt);font-family:var(--display);-webkit-font-smoothing:antialiased;min-height:100%}
   body{padding:28px 20px 64px;max-width:1400px;margin:0 auto}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
-    color:var(--mint);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    color:var(--coral);display:flex;align-items:center;gap:12px;margin-bottom:14px}
   .eyebrow .tag{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px;letter-spacing:.12em;font-size:11px}
-  h1{font-size:clamp(26px,5vw,44px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+  h1{font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
   h1 .thin{color:var(--muted);font-weight:400}
   .lede{color:var(--muted);max-width:720px;margin-top:14px;font-size:15.5px;line-height:1.55}
   .lede code{font-family:var(--mono);color:var(--gold);background:var(--gold-deep);padding:1px 6px;border-radius:6px;font-size:.9em}
   .controls-top{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
   .field{flex:1;min-width:260px}
-  .field.small{flex:0 0 120px;min-width:90px}
   .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
-  input[type=text],input[type=number]{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
+  .input-shell{display:flex;gap:10px}
+  input[type=text]{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--txt);
     font-family:var(--mono);font-size:16px;letter-spacing:.05em;padding:14px 16px;border-radius:12px;outline:none;transition:border-color .2s, box-shadow .2s}
-  input:focus{border-color:var(--mint);box-shadow:0 0 0 4px rgba(55,224,196,.14)}
+  input:focus{border-color:var(--coral);box-shadow:0 0 0 4px rgba(255,111,97,.14)}
   .btn{font-family:var(--display);font-weight:600;font-size:15px;border:1px solid var(--line);
     background:var(--panel);color:var(--txt);border-radius:12px;padding:0 20px;height:52px;cursor:pointer;
     transition:transform .12s, background .2s, border-color .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:9px}
   .btn:hover{background:var(--panel-2)} .btn:active{transform:translateY(1px)}
-  .btn.primary{background:linear-gradient(180deg,#7af0d8,#1fb89a);color:#04201a;border:none;font-weight:700}
+  .btn.primary{background:linear-gradient(180deg,#ff9186,#f04f42);color:#2b0704;border:none;font-weight:700}
   .btn.primary:hover{filter:brightness(1.06)}
   .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
   .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
   .chip{font-family:var(--mono);font-size:13px;letter-spacing:.03em;color:var(--muted);
     background:var(--ink-2);border:1px solid var(--line-soft);border-radius:999px;padding:6px 13px;cursor:pointer;transition:.18s}
-  .chip:hover{color:var(--txt);border-color:var(--mint);background:var(--mint-deep)}
+  .chip:hover{color:var(--txt);border-color:var(--coral);background:var(--coral-deep)}
   .chip b{color:var(--muted-2);font-weight:400;margin-left:7px}
   .grid{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;margin-top:26px;align-items:start}
   @media (max-width:880px){.grid{grid-template-columns:1fr}}
@@ -58,11 +57,11 @@
   .card-head h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
   .phase-pill{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
   .phase-pill.check{color:var(--sky);border-color:#1c4a5b;background:var(--sky-deep)}
-  .phase-pill.decide{color:var(--gold);border-color:#4a3d17;background:var(--gold-deep)}
-  .phase-pill.found{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.uphill{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
+  .phase-pill.downhill{color:var(--gold);border-color:#4a3d17;background:var(--gold-deep)}
   .phase-pill.done{color:var(--mint);border-color:#164e46;background:var(--mint-deep)}
-  .phase-pill.fail{color:var(--coral);border-color:#4a2017;background:var(--coral-deep)}
   .stage{padding:24px 18px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+
   .tape{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;position:relative}
   .col{display:flex;flex-direction:column;align-items:center;gap:6px;width:46px}
   @media (max-width:560px){.col{width:34px}}
@@ -79,66 +78,65 @@
   .cell.left{background:#0f1f3a;border-color:var(--blue);color:var(--blue)}
   .cell.right{background:#1c1430;border-color:var(--violet);color:var(--violet)}
   .cell.mid{background:var(--gold-deep);border-color:var(--gold);color:var(--gold);transform:translateY(-5px) scale(1.05)}
+  .cell.compare{box-shadow:inset 0 0 0 2px var(--sky)}
+  .cell.discarded{opacity:.3}
   .cell.found{background:var(--mint-deep);border-color:var(--mint);color:var(--mint);box-shadow:0 10px 22px -12px var(--mint)}
-  .cell.outrange{opacity:.3}
-  .cell.good{background:#0f2f2c;border-color:#1c5b52;color:var(--mint)}
-  .cell.bad{background:var(--coral-deep);border-color:#5b1c1c;color:var(--coral)}
-  .cell.insert{box-shadow:inset 0 0 0 2px var(--gold)}
+  .slope-arrow{font-family:var(--mono);font-size:11px;color:var(--muted-2);text-align:center;min-height:16px}
+  .slope-arrow .up{color:var(--mint)} .slope-arrow .down{color:var(--gold)}
+
   .stats-row{display:flex;gap:22px;font-family:var(--mono);font-size:14px;color:var(--muted);flex-wrap:wrap;justify-content:center}
   .stats-row b{color:var(--txt);font-size:15px}
+
   .message{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:var(--txt);text-align:center;max-width:720px;min-height:44px;padding:0 6px}
   .message .s{color:var(--sky)} .message .x{color:var(--coral)} .message .m{color:var(--mint)} .message .k{color:var(--gold)}
   .message .l{color:var(--blue)} .message .r{color:var(--violet)}
   .result-banner{display:none;align-items:center;gap:12px;justify-content:center;font-family:var(--display);
     font-weight:700;font-size:19px;padding:12px 22px;border-radius:14px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
   .result-banner.ok{display:flex;color:var(--mint);background:var(--mint-deep);border:1px solid #1c5b52}
-  .result-banner.no{display:flex;color:var(--coral);background:var(--coral-deep);border:1px solid #5b1c1c}
   @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
   .transport{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap;background:rgba(255,255,255,.012)}
   .icon-btn{width:44px;height:44px;padding:0;justify-content:center;font-size:16px}
   .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px}
   .progress{flex:1;height:6px;background:var(--ink-2);border-radius:999px;overflow:hidden;border:1px solid var(--line-soft)}
-  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--sky));transition:width .2s}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--mint));transition:width .2s}
   .step-count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
   .speed{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
-  .speed input{accent-color:var(--mint);width:96px}
-  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:12.4px;line-height:1.7;overflow-x:auto}
+  .speed input{accent-color:var(--coral);width:96px}
+  .code{padding:16px 4px 16px 0;font-family:var(--mono);font-size:12.6px;line-height:1.75;overflow-x:auto}
   .code .ln{display:flex;padding:1px 18px 1px 0;white-space:pre;position:relative;transition:background .18s}
-  .code .ln .no{width:32px;text-align:right;padding-right:14px;color:#3f5170;user-select:none;flex-shrink:0}
+  .code .ln .no{width:34px;text-align:right;padding-right:16px;color:#3f5170;user-select:none;flex-shrink:0}
   .code .kw{color:#ff9db1} .code .ty{color:#7fd0ff} .code .fn{color:#f6c453} .code .tx{color:#c6d4ee}
-  .code .ln.exec{background:linear-gradient(90deg,rgba(55,224,196,.16),transparent 82%)}
-  .code .ln.exec .no{color:var(--mint)}
-  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:18px;background:var(--mint);border-radius:2px}
+  .code .ln.exec{background:linear-gradient(90deg,rgba(255,111,97,.16),transparent 82%)}
+  .code .ln.exec .no{color:var(--coral)}
+  .code .ln.exec::before{content:"";position:absolute;left:0;width:3px;height:20px;background:var(--coral);border-radius:2px}
   .legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .dot{width:10px;height:10px;border-radius:4px;border:1.5px solid}
   .dot.l{background:#0f1f3a;border-color:var(--blue)} .dot.r{background:#1c1430;border-color:var(--violet)}
   .dot.mid{background:var(--gold-deep);border-color:var(--gold)} .dot.m{background:var(--mint-deep);border-color:var(--mint)}
-  .dot.g{background:#0f2f2c;border-color:#1c5b52} .dot.b{background:var(--coral-deep);border-color:#5b1c1c}
   .foot{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);text-align:center;line-height:1.7}
-
 </style>
 </head>
 <body>
 
-  <div class="eyebrow">Binary Search — Classic <span class="tag">LeetCode 35</span></div>
-  <h1>Search Insert Position <span class="thin">/ visualized</span></h1>
+  <div class="eyebrow">Binary Search — Hard <span class="tag">LeetCode 162</span></div>
+  <h1>Find Peak Element <span class="thin">/ visualized</span></h1>
   <p class="lede">
-    Same binary search template as LC 704 — but a miss is still useful. When the range collapses,
-    <code>left</code> is exactly where <code>target</code> would be inserted to keep the array sorted
-    (the first index with value ≥ target).
+    No target, no need for the whole array to be sorted — just follow the slope. Compare
+    <code>nums[mid]</code> to its right neighbor: if it's still climbing, a peak is guaranteed
+    somewhere ahead (imagine the array bounded by <code>-∞</code> on both edges — an ascending run
+    can't just fall off the end). If it's flat or descending, the peak is at <code>mid</code> or
+    to its left.
   </p>
 
   <div class="controls-top">
     <div class="field">
-      <label for="arrInput">Sorted array (comma-separated, distinct)</label>
-      <input id="arrInput" type="text" value="1, 3, 5, 6" spellcheck="false" autocomplete="off">
+      <label for="arrInput">Array (comma-separated)</label>
+      <div class="input-shell">
+        <input id="arrInput" type="text" value="1, 2, 3, 1" spellcheck="false" autocomplete="off">
+        <button class="btn primary" id="runBtn">▶ Run</button>
+      </div>
     </div>
-    <div class="field small">
-      <label for="targetInput">Target</label>
-      <input id="targetInput" type="number" value="5">
-    </div>
-    <button class="btn primary" id="runBtn">▶ Run</button>
   </div>
   <div class="examples" id="examples"></div>
 
@@ -147,6 +145,7 @@
       <div class="card-head"><h2>Execution</h2><span class="phase-pill" id="phasePill">idle</span></div>
       <div class="stage">
         <div class="tape" id="tape"></div>
+        <div class="slope-arrow" id="slopeArrow"></div>
         <div class="stats-row" id="statsRow"></div>
         <div class="message" id="message">Press <span class="k">Run</span> to begin.</div>
         <div class="result-banner" id="banner"></div>
@@ -163,6 +162,7 @@
         <div class="speed">Speed<input type="range" id="speed" min="1" max="10" value="6"></div>
       </div>
     </div>
+
     <div class="card">
       <div class="card-head"><h2>Java · running line</h2></div>
       <div class="code" id="code"></div>
@@ -170,66 +170,70 @@
         <span><i class="dot l"></i>left</span>
         <span><i class="dot mid"></i>mid</span>
         <span><i class="dot r"></i>right</span>
-        <span><i class="dot m"></i>answer / insert</span>
+        <span><i class="dot m"></i>peak</span>
       </div>
     </div>
   </div>
-  <div class="foot">O(log n) time · O(1) space &nbsp;·&nbsp; on a miss, left lands on the insert index (lower_bound).</div>
+
+  <div class="foot">O(log n) time · O(1) space &nbsp;·&nbsp; works even on an unsorted array — a peak is guaranteed to exist for any array with imaginary -∞ edges.</div>
 
 <script>
 (function(){
   "use strict";
+
   const CODE = [
-    [['kw','public '],['ty','int '],['fn','searchInsert'],['tx','('],['kw','int'],['tx','[] nums, '],['kw','int '],['tx','target) {']],
+    [['kw','public '],['ty','int '],['fn','findPeakElement'],['tx','('],['kw','int'],['tx','[] nums) {']],
     [['tx','    '],['kw','int '],['tx','left = 0, right = nums.length - 1;']],
-    [['tx','    '],['kw','while '],['tx','(left <= right) {']],
+    [['tx','    '],['kw','while '],['tx','(left < right) {']],
     [['tx','        '],['kw','int '],['tx','mid = left + (right - left) / 2;']],
-    [['tx','        '],['kw','if '],['tx','(nums[mid] == target) '],['kw','return '],['tx','mid;']],
-    [['tx','        '],['kw','if '],['tx','(nums[mid] < target) {']],
+    [['tx','        '],['kw','if '],['tx','(nums[mid] < nums[mid + 1]) {']],
     [['tx','            left = mid + 1;']],
     [['tx','        } '],['kw','else '],['tx','{']],
-    [['tx','            right = mid - 1;']],
+    [['tx','            right = mid;']],
     [['tx','        }']],
     [['tx','    }']],
-    [['tx','    '],['kw','return '],['tx','left;  // insert position']],
+    [['tx','    '],['kw','return '],['tx','left;']],
     [['tx','}']]
   ];
 
-  function buildFrames(nums, target){
+  function buildFrames(nums){
     const n = nums.length, frames = [];
-    let left = 0, right = n - 1;
-    frames.push({arr:nums.slice(), left,right,mid:-1, phase:'check', code:1,
-      msg:`Initialize <span class="l">left=0</span>, <span class="r">right=${right}</span>. Target <span class="k">${target}</span>.`});
-    while(left <= right){
-      const mid = left + Math.floor((right - left) / 2);
-      frames.push({arr:nums.slice(), left,right,mid, phase:'check', code:3,
-        msg:`<span class="k">mid = ${mid}</span> → nums[mid] = ${nums[mid]}.`});
-      if(nums[mid] === target){
-        frames.push({arr:nums.slice(), left,right,mid, phase:'found', code:4, foundIdx:mid,
-          msg:`<span class="m">nums[mid] == target</span> — already present at index ${mid}.`});
-        frames.push({arr:nums.slice(), left,right,mid, phase:'done', code:4, done:true, found:true, answer:mid, foundIdx:mid,
-          msg:`<span class="m">Return ${mid}.</span>`});
-        return frames;
-      }
-      if(nums[mid] < target){
-        frames.push({arr:nums.slice(), left,right,mid, phase:'decide', code:6,
-          msg:`nums[mid]=${nums[mid]} < target — need a larger index. <span class="s">left = mid + 1</span>.`});
-        left = mid + 1;
+    let left = 0, right = n-1;
+
+    frames.push({arr:nums.slice(), left,right,mid:-1, cmp:-1, phase:'check', code:1,
+      msg:`Initialize <span class="l">left=0</span>, <span class="r">right=${right}</span>.`});
+
+    if(n===1){
+      frames.push({arr:nums.slice(), left:0,right:0,mid:-1, cmp:-1, phase:'done', code:10, done:true, answer:0, foundIdx:0,
+        msg:`<span class="m">Single element — it's trivially a peak.</span> Return 0.`});
+      return frames;
+    }
+
+    while(left<right){
+      const mid = left + Math.floor((right-left)/2);
+      frames.push({arr:nums.slice(), left,right,mid, cmp:mid+1, phase:'check', code:3,
+        msg:`<span class="k">mid = ${mid}</span> (value ${nums[mid]}). Compare against its right neighbor, nums[${mid+1}]=${nums[mid+1]}.`});
+
+      if(nums[mid] < nums[mid+1]){
+        frames.push({arr:nums.slice(), left,right,mid, cmp:mid+1, discard:[left,mid], phase:'uphill', code:5, slope:'up',
+          msg:`<span class="m">nums[mid]=${nums[mid]} &lt; nums[mid+1]=${nums[mid+1]}</span> — still climbing. A peak is guaranteed ahead. left = mid + 1.`});
+        left = mid+1;
       } else {
-        frames.push({arr:nums.slice(), left,right,mid, phase:'decide', code:8,
-          msg:`nums[mid]=${nums[mid]} > target — insert is at mid or left of it. <span class="s">right = mid − 1</span>.`});
-        right = mid - 1;
+        frames.push({arr:nums.slice(), left,right,mid, cmp:mid+1, discard:[mid+1,right], phase:'downhill', code:7, slope:'down',
+          msg:`<span class="k">nums[mid]=${nums[mid]} ≥ nums[mid+1]=${nums[mid+1]}</span> — flat or falling. The peak is at mid or to its left. right = mid.`});
+        right = mid;
       }
     }
-    frames.push({arr:nums.slice(), left,right:-1,mid:-1, phase:'done', code:11, done:true, found:false, answer:left, insertIdx:left,
-      msg:`Range empty. <span class="m">left = ${left}</span> is the insert position (first index ≥ target).`});
+
+    frames.push({arr:nums.slice(), left,right:left,mid:-1, cmp:-1, phase:'done', code:10, done:true, answer:left, foundIdx:left,
+      msg:`<span class="m">left == right at index ${left}.</span> nums[${left}] = ${nums[left]} is a peak.`});
     return frames;
   }
 
   const $ = id => document.getElementById(id);
-  const tapeEl=$('tape'), statsRowEl=$('statsRow'), msgEl=$('message'),
+  const tapeEl=$('tape'), slopeArrowEl=$('slopeArrow'), statsRowEl=$('statsRow'), msgEl=$('message'),
         bannerEl=$('banner'), pillEl=$('phasePill'), barEl=$('bar'), countEl=$('stepCount'),
-        codeEl=$('code'), arrEl=$('arrInput'), targetEl=$('targetInput');
+        codeEl=$('code'), arrEl=$('arrInput');
   let frames=[], idx=0, playing=false, timer=null;
 
   (function renderCode(){
@@ -245,7 +249,9 @@
     tapeEl.innerHTML='';
     for(let k=0;k<len;k++){
       const col=document.createElement('div'); col.className='col';
-      col.innerHTML = `<div class="caret" data-caret="${k}"></div><div class="cell" data-cell="${k}"></div><div class="idx">${k}</div>`;
+      col.innerHTML = `<div class="caret" data-caret="${k}"></div>`+
+        `<div class="cell" data-cell="${k}"></div>`+
+        `<div class="idx" data-idx="${k}">${k}</div>`;
       tapeEl.appendChild(col);
     }
   }
@@ -257,13 +263,12 @@
       const caret=tapeEl.querySelector(`[data-caret="${c}"]`);
       cell.textContent = f.arr[c];
       let cls='cell';
-      const inRange = f.left>=0 && f.right>=0 && c>=f.left && c<=f.right;
-      if(f.right>=0 && !inRange && f.left>=0) cls+=' outrange';
+      if(f.discard && c>=f.discard[0] && c<=f.discard[1]) cls+=' discarded';
       if(c===f.left) cls+=' left';
       if(c===f.right) cls+=' right';
       if(c===f.mid) cls+=' mid';
+      if(c===f.cmp) cls+=' compare';
       if(c===f.foundIdx) cls+=' found';
-      if(f.insertIdx!=null && c===f.insertIdx) cls+=' insert found';
       cell.className=cls;
       caret.innerHTML='';
       if(c===f.left) caret.innerHTML='<span class="p pL">L</span>';
@@ -271,22 +276,30 @@
       if(c===f.mid) caret.innerHTML='<span class="p pM">M</span>';
       caret.style.opacity = caret.innerHTML ? '1' : '0';
     }
-    // show insert marker when answer is past end
+
+    slopeArrowEl.innerHTML = f.slope==='up' ? '<span class="up">↗ ascending — peak ahead</span>'
+      : f.slope==='down' ? '<span class="down">↘ descending/flat — peak at or before mid</span>' : '';
+
     statsRowEl.innerHTML = `
       <span>left = <b>${f.left>=0?f.left:'—'}</b></span>
       <span>mid = <b>${f.mid>=0?f.mid:'—'}</b></span>
-      <span>right = <b>${f.right>=0?f.right:'—'}</b></span>`;
+      <span>right = <b>${f.right>=0?f.right:'—'}</b></span>
+    `;
+
     msgEl.innerHTML = f.msg;
-    const pmap={check:['check','◆ check'],decide:['decide','→ decide'],found:['found','★ found'],done:['done','■ complete']};
+
+    const pmap={check:['check','◆ check'],uphill:['uphill','↗ uphill'],downhill:['downhill','↘ downhill'],done:['done','■ complete']};
     const [pc,ptxt]=pmap[f.phase]||['','idle'];
     pillEl.className='phase-pill '+pc; pillEl.textContent=ptxt;
+
     codeEl.querySelectorAll('.ln').forEach(l=>l.classList.remove('exec'));
     const line=codeEl.querySelector(`[data-line="${f.code}"]`); if(line) line.classList.add('exec');
+
     bannerEl.className='result-banner';
     if(idx===frames.length-1 && f.done){
-      bannerEl.className='result-banner ok';
-      bannerEl.innerHTML = f.found ? `✓ Found at index ${f.answer}` : `✓ Insert at index ${f.answer}`;
+      bannerEl.className='result-banner ok'; bannerEl.innerHTML=`✓ Peak at index ${f.answer} (value ${f.arr[f.answer]})`;
     }
+
     barEl.style.width=(frames.length<=1?100:(idx/(frames.length-1)*100))+'%';
     countEl.textContent=`${idx+1} / ${frames.length}`;
     $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx===frames.length-1;
@@ -295,9 +308,8 @@
   function run(){
     stop();
     const arr = parseArr(arrEl.value);
-    const target = Number(targetEl.value);
     buildTape(arr.length);
-    frames = buildFrames(arr, isNaN(target)?0:target);
+    frames = buildFrames(arr);
     idx=0; render();
   }
   function next(){ if(idx<frames.length-1){idx++;render();} else stop(); }
@@ -309,36 +321,35 @@
   function togglePlay(){ playing?stop():play(); }
 
   const EX=[
-    {v:'1, 3, 5, 6', t:5, note:'found at 2'},
-    {v:'1, 3, 5, 6', t:2, note:'insert at 1'},
-    {v:'1, 3, 5, 6', t:7, note:'insert at end'},
-    {v:'1, 3, 5, 6', t:0, note:'insert at 0'},
-    {v:'1, 3, 5, 6', t:4, note:'insert at 2'},
-    {v:'1', t:1, note:'single hit'},
+    ['1, 2, 3, 1','answer index 2'],
+    ['1, 2, 1, 3, 5, 6, 4','multiple peaks, finds one'],
+    ['1','single element'],
+    ['1, 2','ascending pair'],
+    ['2, 1','descending pair'],
+    ['5, 4, 3, 2, 1','strictly descending'],
+    ['1, 2, 3, 4, 5','strictly ascending'],
   ];
   (function chips(){
     const box=$('examples');
-    EX.forEach(ex=>{
-      const c=document.createElement('button'); c.className='chip';
-      c.innerHTML=`[${ex.v.replace(/\s/g,'')}], target=${ex.t}<b>${ex.note}</b>`;
-      c.onclick=()=>{ arrEl.value=ex.v; targetEl.value=ex.t; run(); };
-      box.appendChild(c);
+    EX.forEach(([w,note])=>{
+      const c=document.createElement('button'); c.className='chip'; c.innerHTML=`[${w.replace(/\s/g,'')}]<b>${note}</b>`;
+      c.onclick=()=>{ arrEl.value=w; run(); }; box.appendChild(c);
     });
   })();
 
   $('runBtn').onclick=run;
   arrEl.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
-  targetEl.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
   $('nextBtn').onclick=()=>{stop();next();};
   $('prevBtn').onclick=()=>{stop();prev();};
   $('playBtn').onclick=togglePlay;
   $('restartBtn').onclick=()=>{stop();idx=0;render();};
   document.addEventListener('keydown',e=>{
-    if(document.activeElement===arrEl||document.activeElement===targetEl) return;
+    if(document.activeElement===arrEl) return;
     if(e.key==='ArrowRight'){stop();next();}
     if(e.key==='ArrowLeft'){stop();prev();}
     if(e.key===' '){e.preventDefault();togglePlay();}
   });
+
   run();
 })();
 </script>

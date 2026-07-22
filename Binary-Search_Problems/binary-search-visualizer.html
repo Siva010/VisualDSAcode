@@ -207,7 +207,7 @@
       if(nums[mid] === target){
         frames.push({arr:nums.slice(), left,right,mid, phase:'found', code:4, foundIdx:mid,
           msg:`<span class="m">nums[mid] == target</span> — found at index ${mid}.`});
-        frames.push({arr:nums.slice(), left:-1,right:-1,mid:-1, phase:'done', code:11, done:true, found:true, answer:mid, foundIdx:mid,
+        frames.push({arr:nums.slice(), left:-1,right:-1,mid:-1, phase:'done', code:4, done:true, found:true, answer:mid, foundIdx:mid,
           msg:`<span class="m">Return ${mid}.</span>`});
         return frames;
       }
